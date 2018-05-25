@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>信息滚动</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Microsoft Yahei";
+            font-size: 14px;
+        }
+        
+        .wrapper {
+            width: 500px;
+            height: 215px;
+            margin: 0 auto;
+            margin-top: 100px;
+            border:1px solid #ccc;
+        }
+
+        header{
+            height: 40px;
+            line-height: 40px;
+            background:#666;
+            text-align: center;
+        }
+
+        .info-area{
+            height: 175px;
+            overflow: hidden;
+        }
+
+        ul{
+            list-style: none;
+        }
+
+        li{
+            height: 24px;
+            line-height: 24px;
+            padding-left: 20px;
+            border-top: 1px solid #ccc;
+        }
+
+        li a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapper">
+    <header>今晚讲嘢夜唔夜</header>
+    <div class="info-area" id="area">
+        <ul id="list">
+                <li><a href=""> 或者你可以坐得更近</a></li>
+                <li><a href="">靠在我耳边讲嘢不会过份</a></li>
+                <li><a href="">但我天生就是这么拘谨</a></li>
+                <li><a href="">还未有那份自信心</a></li>
+                <li><a href="">若你问我什么先叫做缘份</a></li>
+                <li><a href="">我会说缘份只留给够进取的人</a></li>
+                <li><a href="">好既然依家个情况系咁</a></li>
+                <li><a href="">过咗今晚之后我先至再做好人</a></li>
+                <li><a href="">今晚讲嘢夜唔夜</a></li>
+                <li><a href="">咁啱我就有部车</a></li>
+        </ul>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript">
+    var area = document.getElementById('area');
+    var time = 50;
+    var speed = 1000;
+    area.innerHTML+=area.innerHTML;
+    var timer;
+
+    //无间隙地进行滚动
+    function scroll(){
+        if(area.scrollTop >= area.offsetHeight){
+            area.scrollTop = 0;
+        }else{
+            area.scrollTop++;
+        }
+    }
+
+    area.onmouseover = function(){
+        clearInterval(timer);
+    };
+
+    area.onmouseout=function(){
+        timer = setInterval('scroll()',time);
+    };
+
+    var liHeight = 24;
+    area.scrollTop = 0;
+
+    //每滚动一条信息停止两秒
+    // function start(){
+    //     area.scrollTop++;
+    //     timer = setInterval('scroll()',time);
+    // }
+    // function scroll(){
+    //     if(area.scrollTop % liHeight == 0){
+    //         clearInterval(timer);
+    //         setTimeout("start()",speed);
+    //     }else{
+    //         area.scrollTop++;
+    //         if(area.scrollTop >= area.scrollHeight/2){
+    //             area.scrollTop = 0;
+    //         }
+    //     }
+    // }
+    setTimeout("start()",speed);
+</script>
+
+</html>
