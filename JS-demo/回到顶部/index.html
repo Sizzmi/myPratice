@@ -34,48 +34,47 @@
   <a href="javascript:" id="btn" title="回到顶部"></a>
 </body>
 <script type="text/javascript">
-  window.onlaod = function(){
-    var btn = document.getElementById('btn');//获取按钮元素
-      timer=null;
-      istop =true; //判断是否到达顶部
-      var client = document.documentElement.clientHeight;
-      //Document.documentElement 是一个会返回文档对象（document）的根元素的只读属性（如HTML文档的 <html> 元素）。
-      //获得根元素的客户端高度
+  window.onload = function(){
+     var btn = document.getElementById('btn'),   //获取按钮元素
+         timer = null,
+         istop = true;   //判断是否到达顶部
+         var client = document.documentElement.clientHeight; //获得根元素的客户端高度 
+         ////Document.documentElement 是一个会返回文档对象（document）的根元素的只读属性（如HTML文档的 <html> 元素）。
 
 
-      window.onscroll = function(){//页面滚动时触发
-      var top = document.documentElement.scrollTop || document.body.scrollTop;
-        //获取滚动条在页面中的位置
-        //document.body是包含当前页面内容的元素,对于拥有<body>元素的文档来说,返回的是<body>元素,对于一个拥有<frameset>元素的文档来说,返回的是最外层的<frameset>元素.
+         window.onscroll = function(){   //页面在滚动时触发
+             var top = document.documentElement.scrollTop || document.body.scrollTop; //获取滚动条在页面中的位置
+             //document.body是包含当前页面内容的元素,对于拥有<body>元素的文档来说,返回的是<body>元素,对于一个拥有<frameset>元素的文档来说,返回的是最外层的<frameset>元素.
+             
+                 if(top >= client){    //判断滚动条是否大于一帧的高度，如果是，则显示回到顶部图标，否则不显示
+                 btn.style.display = 'block';
+             }else{
+                 btn.style.display = 'none';
+             }
 
-          if(top >= client){//判断滚动条是否大于一帧的高度，如果是，则显示回到顶部=图标，否则不显示
-          btn.style.display = 'block';
+             if(!istop){
+                 clearInterval(timer);   //如果达到浏览器顶部，则取消定时函数
+     //window.clearInterval(intervalID)
+     // intervalID是你想要取消的定时器的ID,这个ID是个整数,是由setInterval()返回的.
+             }
 
-          }else{
-            btn.style.display = 'none';
-          }
-          
-          if(!stop){
-            clearInterval(timer); //如果达到浏览器顶部，则取消定时函数
-            //取消用setInterval设置的重复定时任务。
-            //window.clearInterval(intervalID)
-            // intervalID是你想要取消的定时器的ID,这个ID是个整数,是由setInterval()返回的.
+             istop = false;   //在滚动条滚动的时候，默认到达顶部的标志是假的
 
-            istop = false; //在滚动条滚动的时候，默认到达顶部的标志是假的
-          }
-          //图片按下时触发的函数
-          btn.onclick = function() {//使用匿名函数
-            timer = setInterval(function(){
-              var top = document.documentElement.scrollTop || document.body.scrollTop;
-              var speed = (-top/5);//设置每次减少的高度，就是实现在快到达顶部的时候，回到顶部的速度变慢，直至回到顶部。
-              document.documentElement.scrollTop =document.body.scrollTop = top+speed;
-              istop = true;
-              if(top == 0){
-                clearInterval(timer);
-              }
-            },30); //每隔30毫秒触发一次
-          }
-      }
+         }
+         //图片按下时触发的函数
+         btn.onclick = function(){  //使用匿名函数
+             timer = setInterval(function(){
+                 var top = document.documentElement.scrollTop || document.body.scrollTop;
+                 var speed = (-top/5);  //设置而每次减少的高度 ，就是实现在快到达顶部的时候，回到顶部的速度变慢，直至回到顶部
+                 document.documentElement.scrollTop = document.body.scrollTop = top + speed;
+                 istop = true;
+                 if(top == 0){
+                     clearInterval(timer);
+                 }
+             },30);    //每隔30毫秒触发一次
+
+         }
+
   }
 
 </script>
