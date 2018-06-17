@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    // ## 函数定义/声明
+
+    //var person = new Object(); 等价于 var person = {};
+
+    //     var o = {x:1, y:2, z:3};            // 三个可枚举的自有属性
+    // o.propertyIsEnumerable("toString"); // false，不可枚举
+    // for (p in o) {          // 遍历属性
+    //     console.log(p);     // 输出x、y和z，不会输出toString
+    // }
+    //=======================================//
+    // for(p in o) {
+    //    if (!o.hasOwnProperty(p)) continue;          // 跳过继承的属性
+    //    if (typeof o[p] === "function") continue;    // 跳过方法
+    // }
+
+    /*
+     * 把 p 中的可枚举属性复制到 o 中，并返回 o
+     * 如果 o 和 p 中含有同名属性，则覆盖 o 中的属性
+     */
+    // function extend(o,p){
+    //   for(prop in p){ //遍历p中所有的属性
+    //     o[prop] = p[prop];//将属性添加到 o 中
+    //   }
+    //   return o ;
+    // }
+
+    /*
+     * 如果 o 中的属性在 p 中没有同名属性，则从 o 中删除这个属性
+     * 返回 o
+     */
+    // function restrict(o, p) {
+    //   for (prop in o) { //遍历o中的所有属性
+    //     if (!(prop in p)) delete o[prop];//如果在p中不存在，则删除之
+    //   }
+    //   return o;
+    // }
+
+    /*
+     * 如果 o 中的属性在 p 中存在同名属性，则从 o 中删除这个属性
+     * 返回 o
+     */
+    // function subtract(o, p) {
+    //   for (prop in p) {//遍历p中所有的属性
+    //     delete o[prop];//从o中删除（删除一个不存在的属性不会报错）
+    //   }
+    //   return o;
+    // }
+
+    /*
+     * 返回一个新对象，这个对象同时拥有 o 的属性和 p 的属性
+     * 如果 o 和 p 中有重名属性，使用 p 中的属性值
+     */
+    // function union(o, p) {
+    //   return extend(extend({}, o), p);
+    // }
+
+    /*
+     * 返回一个数组，这个数组包含的是 o 中可枚举的自有属性的名字
+     */
+    // function keys(o) {
+    //   if (typeof o !== "object") throw TypeError();//参数必须是对象
+    //   var result = [];                             //将要返回的数组
+    //   for (var prop in o) {                        //遍历所有可枚举的属性
+    //     if (o.hasOwnProperty(prop))              //判断是否自由属性
+    //       result.push(prop);                      //将属性名添加到数组中
+    //   }
+    //   return result;                            //返回这个数组
+    // }
+
+    // var empty = [];                 // 没有元素的数组
+    // var primes = [2, 3, 5, 7, 11];  // 有5个数值的数组
+    // var misc = [1.1, true, "a"];    // 3个不同类型的元素
+
+    // // 数组直接量中的值不一定要是常量，可以是任意的表达式
+    // var base = 1024;
+    // var table = [base, base+1, base+2, base+3];
+
+    // 也可以包含对象直接量或其他数组直接量
+    // var b = [[1, {x:1, y:2}], [2, {x:3, y:4}]];
+
+    // 调用时没有参数
+    // var a = new Array();
+
+    // 调用时有一个数值参数，它指定长度
+    // var a = new Array(10); 
+
+    // 显式指定多个数组元素或者数组的一个非数值元素
+    // var a = new Array(5, 4, 3, 2, 1, "testing");
+
+    // var a = ["world"];     // 从一个元素的数组开始
+    // var value = a[0];      // 读第0个元素
+    // a[1] = 3.14;           // 写第1个元素
+    // var i = 2; 
+    // a[i] = 3;              // 写第2个元素
+    // a[i + 1] = "hello";    // 写第3个元素
+    // a[a[i]] = a[0];        // 读第0个和第2个元素，写第3个元素
+
+    // a[-1.23] = true;  // 这将创建一个名为"-1.23"的属性
+    // a["1000"] = 0;    // 这是数组的第1001个元素
+    // a[1.000]          // 和 a[1] 相等
+
+    // a  = new Array(5); //数组没有元素，但是a.length = 5
+    // a = []; //创建一个空数组 a.length = 0;
+    // a[1000] = 0; //添加一个元素 a.length 被自动更新为1001
+
+    // var a1 = [,'1','2'];    // 此数组长度是3 
+    // var a2 = [undefined];   // 此数组包含一个值为 undefined 的元素 
+    // console.log(0 in a1);   // false，a1 在索引0处没有元素
+    // console.log(0 in a2);   // true，a2 在索引0处有一个值为 undefined 的元素 
+
+    // [].length //0,数组没有元素
+    // ['a','b','c'].length  //3 ,最大索引为2, length为3
+
+    // a = [1,2,3,4,5];     // 从5个元素的数组开始
+    // a.length = 3;        // 现在 a 为[1,2,3]
+    // a.length = 0;        // 删除所有的元素。a 为[ ]
+    // a.length = 5;        // 长度为5，但是没有元素，就像 new Array(5)
+
+    // a = [1,2,3];                                        //从3个语速的数组开始
+    // Object.defineProperty(a,"length",{writable:false});//让length 属性只读
+    // a.length = 0;
+
+    // a = [];           // 开始是一个空数组
+    // a[0] = "zero";   // 然后向其中添加元素
+    // a[1] = "one";
+
+    // a = [];             // 开始是一个空数组
+    // a.push("zero");     //在末尾添加一个元素 a =["zero"]
+    // a.push("one","two");  //再添加两个元素 a = ["zero","one","two"]
+
+    // a = [1,2,3]; 
+    // delete a[1];   // a在索引1的位置不再有元素
+    // 1 in a         // => false: 数组索引1并未在数组中定义
+    // a.length       // => 3: delete操作并不影响数组长度
+
+    // 数组遍历
+
+    // var keys = Object.keys(o);   //获得 o 对象属性名组成的数组
+    // var values = [];            //在数组中存储匹配属性的值
+    // for (var i = 0; i < keys.length; i++) { //对于数组中每个索引
+    //   var key = keys[i];              //获得索引处的键值
+    //   values[i] = o[key];             //在values数组中保存属性值
+    // }
+
+    // for(var i = 0, len = keys.length; i < len; i++) {
+    //    // 循环体仍然不变
+    // }
+
+    // 这些例子假设数组是稠密的，并且所有的元素都是合法数据。否则，使用数组元素之前应该先检测它们。例如：
+    // for (var i = 0; i < a.length; i++) {
+    //   if (!a[i]) continue;          //跳过null，undefined和不存在的元素
+    //   if (!(i in a)) continue;      //跳过不存在的元素
+    //   if (a[i] === undefined) continue;//跳过undefined 和不存在的元素
+    //   //循环体
+    // }
+
+    // 还可以使用 `for-in` 循环处理稀疏数组。循环每次将一个可枚举的属性名（包括数组索引）赋值给循环变量，不存在的索引将不会遍历到。例如：
+    // for(var index in sparseArray){
+    //   var value = sparseArray[index];
+    //   // 此处可以使用索引和值做一些事情
+    // }
+
+    // 但由于 `for-in` 循环能够枚举继承的属性名，如添加到 `Array.prototype` 中的方法。基于这个原因，在数组上不应该使用 `for-in` 循环，除非使用额外的检测方法来过滤不想要的属性。例如：
+
+    // for (var i in a) {
+    //   //跳过继承的属性
+    //   if (!a.hasOwnProperty(i)) continue;
+
+    //   //跳过不是非负整数的i
+    //   if (String(Math.floor(Math.abs(Number(i)))) !== i) continue;
+    // }
+
+    // `JavaScript` 规范允许 `for-in` 循环以不同的顺序遍历对象的属性。通常数组元素的遍历实现是升序的，但不能保证一定是这样的。如果数组同时拥有对象属性和数组元素，返回的属性名很可能是按照创建的顺序而非数值的大小顺序。如何处理这个问题的实现，各个浏览器都不相同，如果算法依赖于遍历的顺序，那么最好不要使用 `for-in` 而用常规的 `for` 循环。
+
+    // ECMAScript 5 定义了一些遍历数组元素的新方法，按照索引的顺序按个传递给定义的一个函数。这些方法中最常用的就是 `forEach()` 方法。例如：
+    // var data = [1,2,3,4,5];//这是需要遍历的数组
+    // var data2 = [1,2,3,4,6];//这是需要遍历的数组
+    // var sumOfSquares = 0; //要得到数据的平方和
+    // data2.forEach(function(y){//把每个元素传递给此函数
+    //   sumOfSquares += y*y;   //平方相加
+    // });
+    // console.log(sumOfSquares);//66
+
+    // Array.isArray([])   // true [] 是数组
+    // Array.isArray({})   // false {}是Object
+
+    // 使用 `instanceof` 的问题是在 Web 浏览器中有可能有多个窗体存在。每个窗体都有自己的 JavaScript 环境，有自己的全局对象。并且，每个全局对象有自己的一组构造函数。因此一个窗体中的对象将不可能是另外窗体中的构造函数的实例。窗体之间的混淆不常发生，但这个问题足已证明 `instanceof` 操作符不能视为一个可靠的数组检测方法。
+
+    // 解决方案是检查对象的类属性，对数组而言该属性的值总是 `"Array"`，因此在 ECMAScript 3 中 `isArray()` 函数的代码可以这样书写。例如：
+
+    // var isArray = Array.isArray || function(o){
+    //   return typeof o ==="object" && Object.prototype.toString.call(o) ==="[object Array]";
+    // };
+
+    // ### 转换方法
+
+    // 所有对象都具有 `valueOf()`、 `toString()` 和 `toLocaleString()` 方法。他们的用途如下：
+
+    // - `valueOf()`：当调用数组的 `valueOf()` 方法，会返回 `Array` 对象的原始值。`valueOf()` 方法通常由 JavaScript 在后台自动调用，并不显式地出现在代码中。
+    // - `toString()`：当调用数组的 `toString()` 方法，会返回以逗号分隔数组中每个值的字符串。为了创建这个字符串会调用数组每一项的 `toString()` 方法。
+    // - `toLocaleString()`：当调用数组的 `toLocaleString()` 方法，会返回以逗号分隔数组中每个值的字符串。为了创建这个字符串会调用数组每一项的 `toLocaleString()` 方法。
+
+
+    // var colors = ["red", "blue", "green"]; 
+    // console.log(colors);            // ["red", "blue", "green"]
+    // console.log(colors.valueOf());  // ["red", "blue", "green"]
+    // console.log(colors.toString()); // red,blue,green
+    // alert(colors.valueOf());        // red,blue,green
+
+    // 在这里，我们首先显式地调用了 `colors` 和 `colors.valueOf()`，返回的都是数组对象。然后，我们又显式地调用了 `toString()` 方法，返回了以逗号分隔数组中每个值的字符串。最后一行代码直接将 `colors.valueOf()` 传递给了 `alert()`。由于 `alert()`要接收字符串参数，所以它会在后台调用 `toString()` 方法，由此会得到与直接调用 `toString()` 方法相同的结果。
+
+    // 当调用数组的 `toLocaleString()` 方法时，它会创建以逗号分隔数组中每个值的字符串。与 `toString()` 方法唯一的不同之处在于，这一次为了取得每一项的值，调用的是每一项的 `toLocaleString()` 方法，而不是 `toString()` 方法。例如：
+
+    // var person1 = {
+    //     toLocaleString : function () {
+    //         return "Nikolaos";
+    //     },
+    //     toString : function() {
+    //         return "Nicholas";
+    //     }
+    // };
+
+    // var person2 = {
+    //     toLocaleString : function () {
+    //         return "Grigorios";
+    //     },
+    //     toString : function() {
+    //         return "Greg";
+    //     }
+    // };
+
+    // var people = [person1, person2];
+    // console.log(people.toString());                // Nicholas,Greg
+    // console.log(people.toLocaleString());          // Nikolaos,Grigorios
+
+    // 数组继承的 `toLocaleString()` 和 `toString()` 方法，在默认情况下都会以逗号分隔的字符串的形式返回数组项。而如果使用 `join()` 方法，则可以使用不同的分隔符来构建这个字符串。`join()` 方法只接收一个参数，即用作分隔符的字符串，然后返回包含所有数组项的字符串。例如：
+
+    // var colors = ["red", "green", "blue"];
+    // console.log(colors.join(","));// red,green,blue
+    // console.log(colors.join("||"));// red||green||blue
+
+    //  如果数组中的某一项的值是 `null` 或者 `undefined`，那么该值在 `join()`、`toLocaleString()`、`toString()` 和 `valueOf()` 方法返回的结果中以空字符串表示。
+
+    // > 数组和字符串之间是可以互相转换的，使用 `String` 对象的原型方法 `split()` 即可实现该功能。这个方法可以基于指定的分隔符将一个字符串分割成多个子字符串，并将结果放在一个数组中。例如：`"red,blue,green,yellow".split(",")` 结果是 `["red", "blue", "green", "yellow"]`。更多 `split()` 方法的说明会在后面章节中详细介绍。
+
+    // ### 栈方法
+
+    // 栈是一种 LIFO（Last-In-First-Out，后进先出）的数据结构，也就是最新添加的项最早被移除。`push()` 方法可以接收任意数量的参数，把它们逐个添加到数组末尾，并返回修改后数组的长度。而 `pop()` 方法则从数组末尾移除最后一项，减少数组的 `length` 值，然后返回移除的项。结合 `push()` 和 `pop()` 方法，就可以像栈一样使用数组。例如：
+
+    // var colors=[];                                  //创建一个数组
+    // var count = colors.push("red","green");          //推入两项
+    // console.log(count);                                //2，数组的长度
+
+    // count=colors.push("black");                 //推入另外一项
+    // console.log(count);                   //3,数组长
+
+    // var item = colors.pop();                  //取得最后一项
+    // console.log(item);              //"black"
+    // console.log(colors.length);         //2,数组的长度
+
+    // ### 队列方法
+
+    // 队列是一种 FIFO（First-In-First-Out，先进先出）的数据结构，队列在列表的末端添加项，从列表的前端移除项。`shift()` 方法则从数组前端移除第一项，减少数组的 `length` 值，然后返回移除的项。结合 `push()` 和 `shift()` 方法，就可以像队列一样使用数组。例如：
+    // var colors = [];                            // 创建一个数组
+    // var count = colors.push("red", "green");    // 推入两项
+    // console.log(count);                         // 2，数组的长度
+
+    // count = colors.push("black");               // 推入另一项
+    // console.log(count);                         // 3，数组的长度
+
+    // var item = colors.shift();                  // 取得第一项
+    // console.log(item);                          // "red"
+    // console.log(colors.length);                 // 2，数组的长度
+
+    // var values = [1, 2, 3, 4, 5];
+    // values.reverse();
+    // console.log(values);  // 5,4,3,2,1
+
+    // var values = [0, 1, 5, 10, 15];
+    // values.sort();
+    // console.log(values);     // 0,1,10,15,5
+
+    // function compare(value1,value2){
+    //   if(value1 < value2){
+    //     return -1;
+    //   }else if(value1 > value2){
+    //     return 1;
+    //   }else{
+    //     return 0;
+    //   }
+    // }
+
+
+    // var colors = ["red", "green", "blue"];
+    // var colors2 = colors.concat("yellow", ["black", "brown"]);
+
+    // console.log(colors);     // red,green,blue
+    // console.log(colors2);    // red,green,blue,yellow,black,brown
+
+
+    // var colors = ["red", "green", "blue", "yellow", "purple"];
+    // var colors2 = colors.slice(1);
+    // var colors3 = colors.slice(1,4);
+
+    // console.log(colors2);   // green,blue,yellow,purple
+    // console.log(colors3);   // green,blue,yellow
+
+
+    // var colors = ["red", "green", "blue"];
+    // var removed = colors.splice(0,1);       // 删除第一项
+    // console.log(colors);                    // green,blue
+    // console.log(removed);                   // red，返回的数组中只包含一项
+
+    // removed = colors.splice(1, 0, "yellow", "orange");  // 从位置1开始插入两项
+    // console.log(colors);                    // green,yellow,orange,blue
+    // console.log(removed);                   // 返回的是一个空数组
+
+    // removed = colors.splice(1, 1, "red", "purple");     // 插入两项，删除一项
+    // console.log(colors);                    // green,red,purple,orange,blue
+    // console.log(removed);                   // yellow，返回的数组中只包含一项
+
+
+    // var numbers = [1,2,3,4,5,4,3,2,1];
+    // console.log(numbers.indexOf(4));          // 3
+    // console.log(numbers.lastIndexOf(4));      // 5
+    // console.log(numbers.indexOf(4, 4));       // 5
+    // console.log(numbers.lastIndexOf(4, 4));   // 3
+
+    // var person = { name: "Nicholas" };
+    // var people = [{ name: "Nicholas" }];
+    // var morePeople = [person];
+    // console.log(people.indexOf(person));      // -1
+    // console.log(morePeople.indexOf(person));  // 0
+
+    // - `every()`，对数组中的每一项运行给定函数，如果该函数对每一项都返回 `true` ，则返回 `true`。
+    // - `filter()`，对数组中的每一项运行给定函数，返回该函数会返回 `true` 的项组成的数组。
+    // - `forEach()`，对数组中的每一项运行给定函数。这个方法没有返回值。
+    // - `map()`，对数组中的每一项运行给定函数，返回每次函数调用的结果组成的数组。
+    // - `some()`，对数组中的每一项运行给定函数，如果该函数对任一项返回 `true` ，则返回 `true`。
+
+    // 以上方法都不会修改数组中的包含的值。在这些方法中，最相似的是 `every()` 和 `some()`，它们都用于查询数组中的项是否满足某个条件。对 `every()` 来说，传入的函数必须对每一项都返回 `true`，这个方法才返回 `true`；否则，它就返回 `false`。而 `some()`方法则是只要传入的函数对数组中的某一项返回 `true`，就会返回 `true`。例如：
+
+    // var numbers = [1,2,3,4,5,4,3,2,1];
+    // var everyResult = numbers.every(function(item,index,array){
+    //   return(item>2);
+    // });
+    // console.log(everyResult);
+
+    // var someResult = numbers.some(function(item, index, array){
+    //     return (item > 2);
+    // });
+    // console.log(someResult);    // true
+
+    // var numbers = [1,2,3,4,5,4,3,2,1];
+    // var filterResult = numbers.filter(function(item,index,array){
+    //   return(item >2);
+    // });
+    // console.log(filterResult);//[3,4,5,4,3]
+
+    // var numbers = [1,2,3,4,5,4,3,2,1];
+    // var mapResult = numbers.map(function(item,index,array){
+    //   return item*2;
+    // });
+    // console.log(mapResult); //[2, 4, 6, 8, 10, 8, 6, 4, 2]
+
+    // var numbers = [1,2,3,4,5,4,3,2,1];
+    // numbers.forEach(function(item,index,array){
+    //   //执行某些操作 
+    // })
+
+    // ECMAScript 5 还新增了两个缩小数组的方法：`reduce()` 和 `reduceRight()`。这两个方法都会迭代数组的所有项，然后构建一个最终返回的值。其中，`reduce()` 方法从数组的第一项开始，逐个遍历到最后。而 `reduceRight()` 则从数组的最后一项开始，向前遍历到第一项。
+
+    // 这两个方法都接收两个参数：一个在每一项上调用的函数和（可选的）作为缩小基础的初始值。传给 `reduce()` 和` reduceRight()` 的函数接收4个参数：前一个值、当前值、项的索引和数组对象。这个函数返回的任何值都会作为第一个参数自动传给下一项。第一次迭代发生在数组的第二项上，因此第一个参数是数组的第一项，第二个参数就是数组的第二项
+
+    // var values = [1,2,3,4,5];
+    // var sum = values.reduce(function(prev, cur, index, array){
+    //     return prev + cur; 
+    // });
+    // console.log(sum); // 15
+    // 第一次执行回调函数，prev是1，cur是2。第二次，prev是3（1加2的结果），cur是3（数组的第三项）。这个过程会持续到把数组中的每一项都访问一遍，最后返回结果
+
+    // var values = [1,2,3,4,5];
+    // var sum = values.reduceRight(function(prev, cur, index, array){
+    //     return prev + cur;
+    // });
+    // console.log(sum); // 15
+
+    // var arr = [2,3,4,2,3,5,6,4,3,2];
+    // var unique = function(arr){
+    //   var result = [];
+    //   arr.forEach(function(item){
+    //     if(result.indexOf(item)<0){
+    //       result.push(item);
+    //     }
+    //   });
+    //   return result;
+    // }
+
+    // console.log(unique(arr)); //[2, 3, 4, 5, 6]
+
+    // var arr = [2,3,4,[2,3,4,5],3,5,[2,3,4,2],4,3,6,2];
+    // var unique = function(arr){
+    //   var result = [];
+    //   arr.forEach(function(item){
+    //     if(Array.isArray(item)){
+    //       item.forEach(function(i){
+    //         if (result.indexOf(i)<0){
+    //           result.push(i);
+    //         }
+    //       });
+    //     }else{
+    //       if(result.indexOf(item)<0){
+    //         result.push(item);
+    //       }
+    //     }
+    //   });
+    //   return result;
+    // }
+    //  console.log(unique(arr));//[2, 3, 4, 5, 6]
+
+    // var arr = [2,3,4,[2,3,[2,3,4,2],5],3,5,[2,3,[2,3,4,2],2],4,3,6,2];
+    // var unique = function(arr){
+    //   var result = [];
+    //   var f = function(i){
+    //     i.forEach(function(item){
+    //       if(Array.isArray(item)){
+    //         f(item);
+    //       }else{
+    //         if(result.indexOf(item)< 0){
+    //           result.push(item);
+    //         }
+    //       }
+    //       });
+    //     };
+    //     f(arr);
+    //     return result;
+    //   }
+
+    //   console.log(unique(arr));//[2, 3, 4, 5, 6]
+
+    //===========================================================
+    // 写法一：函数声明（推荐写法）
+    // function sum(num1,num2){
+    //   return num1 + num2;
+    // }
+
+    // //写法二：函数表达式（推荐写法）
+    // var sum = function(num1,num2){
+    //   return num1+num2;
+    // };
+
+    // // 写法三：Function 构造函数(不推荐写法)
+    // var sum = new Function("num1","num2","return num1+num2");
+
+    // 由于函数名仅仅是指向函数的指针，因此函数名与包含对象指针的其他变量没有什么不同。换句话说，一个函数可能会有多个名字。例如：
+    // function sum(num1,num2){
+    //   return num1+num2;
+    // }
+    // console.log(sum(10,10));   //20
+
+    // var anotherSum = sum;
+    // console.log(anotherSum(10,10)); //20
+
+    // sum = null;
+    // console.log(anotherSum(10,10)); //20
+
+    // 将函数名想象为指针，也有助于理解为什么 JavaScript 中没有函数重载的概念。
+    // function addSomeNumber(num){
+    //   return num + 100;
+    // }
+
+    // function addSomeNumber(num, num2) {
+    //     return num + 200;
+    // }
+
+    // var result = addSomeNumber(100);    // 300
+    // 显然，这个例子中声明了两个同名函数，而结果则是后面的函数覆盖了前面的函数。以上代码实际上与下面的代码没有什么区别。
+
+
+    // console.log(sum(10,10)); // Uncaught TypeError: sum is not a function
+    // var sum = function(num1, num2){
+    //     return num1 + num2;
+    // };
+
+    // ## 作为值的函数
+
+    // 因为 JavaScript 中的函数名本身就是变量，所以函数也可以作为值来使用。也就是说，不仅可以像传递参数一样把一个函数传递给另一个函数，而且可以将一个函数作为另一个函数的结果返回。来看一看下面的函数。
+
+    // function callSomeFunction(someFunction,someArgument){
+    //   return someFunction(someArgument);
+    // }
+    // // 这个函数接受两个参数。第一个参数应该是一个函数，第二个参数应该是要传递给该函数的一个值。然后，就可以像下面的例子一样传递函数了。
+
+    // function add10(num){
+    //   return num +10;
+    // }
+
+    // var result1 = callSomeFunction(add10,10);
+    // console.log(result1);// 20
+
+    // function getGreeting(name){
+    //   return "hello," +name;
+    // }
+
+    // var result2 = callSomeFunction(getGreeting,"Nicholas");
+    // console.log(result2);// "Hello, Nicholas"
+
+    // 这里的 `callSomeFunction()` 函数是通用的，即无论第一个参数中传递进来的是什么函数，它都会返回执行第一个参数后的结果。要访问函数的指针而不执行函数的话，必须去掉函数名后面的那对圆括号。因此上面例子中传递给 `callSomeFunction()` 的是 `add10` 和 `getGreeting`，而不是执行它们之后的结果。
+
+    // 当然，还可以从一个函数中返回另一个函数，而且这也是极为有用的一种技术。例如，假设有一个对象数组，我们想要根据某个对象属性对数组进行排序。而传递给数组 `sort()` 方法的比较函数要接收两个参数，即要比较的值。可是，我们需要一种方式来指明按照哪个属性来排序。要解决这个问题，可以定义一个函数，它接收一个属性名，然后根据这个属性名来创建一个比较函数，下面就是这个函数的定义。
+
+    // function createComparisonFunction(propertyName){
+    //   return function(object1,object2){
+    //     var value1 = object1[propertyName];
+    //     var value2 = object2[propertyName];
+    //     if(value1 < value2){
+    //       return -1;
+    //     }else if(value1>value2){
+    //       return 1;
+    //     }else{
+    //       return 0;
+    //     }
+    //   };
+    // }
+    // 这个函数定义看起来有点复杂，但实际上无非就是在一个函数中嵌套了另一个函数，而且内部函数前面加了一个 `return` 操作符。在内部函数接收到 `propertyName` 参数后，它会使用方括号表示法来取得给定属性的值。取得了想要的属性值之后，定义比较函数就非常简单了。上面这个函数可以像在下面例子中这样使用。
+
+    // var data =[{name:"za",age:28},{name:"ni",age:29}];
+
+    // data.sort(createComparisonFunction("name"));
+    // console.log(data[0].name);
+
+    // data.sort(createComparisonFunction("age"));
+    // console.log(data[0].name);
+
+    // 这里，我们创建了一个包含两个对象的数组 `data`。其中，每个对象都包含一个 `name` 属性和一个 `age` 属性。在默认情况下，`sort()` 方法会调用每个对象的 `toString()` 方法以确定它们的次序；但得到的结果往往并不符合人类的思维习惯。因此，我们调用 `createComparisonFunction("name")` 方法创建了一个比较函数，以便按照每个对象的 `name` 属性值进行排序。而结果排在前面的第一项是 `name` 为 `"Nicholas"`，`age` 是 `29` 的对象。然后，我们又使用了 `createComparisonFunction("age")` 返回的比较函数，这次是按照对象的age属性排序。得到的结果是 `name` 值为 `"Zachary"`，`age` 值是 `28` 的对象排在了第一位。
+
+    // function factorial(num){
+    //   if(num <=1){
+    //     return 1;
+    //   }else{
+    //     return num * factorial(num-1)
+    //   }
+    // }
+
+    // 定义阶乘函数一般都要用到递归算法，如上面的代码所示，在函数有名字，而且名字以后也不会变的情况下，这样定义没有问题。但问题是这个函数的执行与函数名 `factorial` 紧紧耦合在了一起。为了消除这种紧密耦合的现象，可以像下面这样使用 `arguments.callee`。
+
+    // function factorial(num) {
+    //   if (num <= 1) {
+    //     return 1;
+    //   } else {
+    //     return num * arguments.callee(num - 1);
+    //   }
+    // }
+
+    // 在这个重写后的 `factorial()` 函数的函数体内，没有再引用函数名 `factorial`。这样，无论引用函数时使用的是什么名字，都可以保证正常完成递归调用。例如：
+    // var trueFactorial = factorial;
+
+    // factorial = function () {
+    //   return 0;
+    // };
+    // console.log(trueFactorial(5));//120
+    // console.log(factorial(15));//0
+
+    //     在此，变量 `trueFactorial` 获得了 `factorial` 的值，实际上是在另一个位置上保存了一个函数的指针。然后，我们又将一个简单地返回 `0` 的函数赋值给 `factorial` 变量。如果像原来的 `factorial()` 那样不使用 `arguments.callee`，调用 `trueFactorial()` 就会返回 `0`。可是，在解除了函数体内的代码与函数名的耦合状态之后，`trueFactorial()` 仍然能够正常地计算阶乘；至于 `factorial()`，它现在只是一个返回 `0` 的函数。
+
+    // 函数内部的另一个特殊对象是 `this`，其行为与 Java 和 C# 中的 `this` 大致类似。换句话说，`this` 引用的是函数据以执行的环境对象（当在网页的全局作用域中调用函数时，`this` 对象引用的就是 `window`）。来看下面的例子。
+
+
+    // window.color="red";
+    // var o ={color:"blue"};
+
+    // function sayColor(){
+    //   console.log(this.color);
+    // }
+    // sayColor();// "red"
+
+    // o.sayColor = sayColor;
+    // o.sayColor();// "blue"
+
+    // 上面这个函数 `sayColor()` 是在全局作用域中定义的，它引用了 `this` 对象。由于在调用函数之前，`this` 的值并不确定，因此 `this` 可能会在代码执行过程中引用不同的对象。当在全局作用域中调用 `sayColor()` 时，`this` 引用的是全局对象 `window`；换句话说，对 `this.color` 求值会转换成对 `window.color` 求值，于是结果就返回了 `"red"`。而当把这个函数赋给对象 `o` 并调用 `o.sayColor()` 时，`this` 引用的是对象 `o`，因此对 `this.color` 求值会转换成对 `o.color` 求值，结果就返回了 `"blue"`。
+
+    // 请大家一定要牢记，函数的名字仅仅是一个包含指针的变量而已。因此，即使是在不同的环境中执行，全局的 `sayColor()` 函数与 `o.sayColor()` 指向的仍然是同一个函数。
+
+    // ECMAScript 5 也规范化了另一个函数对象的属性 `caller`。这个属性中保存着「调用当前函数的函数的引用」，如果是在全局作用域中调用当前函数，它的值为 `null`。例如：
+
+    // function outer(){
+    //   inner();
+    // }
+
+    // function inner(){
+    //   console.log(arguments.callee.caller);
+    // }
+
+    // outer();
+    // 以上代码会导致警告框中显示 `outer()` 函数的源代码。因为 `outer()` 调用了 `inter()`，所以 `arguments.callee.caller` 就指向 `outer()`。
+
+    // 在严格模式下，访问 `arguments.callee`属性，或为函数的 `caller` 属性赋值，都会导致错误。
+
+    // function sayNAme(name){
+    //   console.log(name);
+    // }
+
+    // function sum(num1,num2){
+    //   return num1+num2;
+    // }
+
+    // function sayHi(){
+    //   console.log("hi");
+    // }
+    // console.log(sayName.length);      // 1
+    // console.log(sum.length);          // 2
+    // console.log(sayHi.length);        // 0
+
+    // 对于 JavaScript 中的引用类型而言，`prototype` 是保存它们所有实例方法的真正所在。换句话说，诸如 `toString()` 和 `valueOf()` 等方法实际上都保存在 `prototype` 名下，只不过是通过各自对象的实例访问罢了。在创建自定义引用类型以及实现继承时，`prototype` 属性的作用是极为重要的。在 ECMAScript 5 中，`prototype` 属性是不可枚举的，因此使用 `for-in` 无法发现。
+
+    // 每个函数都包含两个非继承而来的方法：`apply()` 和 `call()`。这两个方法的用途都是在特定的作用域中调用函数，实际上等于设置函数体内 `this` 对象的值。首先，`apply()` 方法接收两个参数：一个是在其中运行函数的作用域，另一个是参数数组。其中，第二个参数可以是 `Array` 的实例，也可以是 `arguments` 对象。例如：
+    // function sum(num1, num2){
+    //     return num1 + num2;
+    // }
+
+    // function callSum1(num1,num2){
+    //   return sum.apply(this.arguments);//传入arguments 对象
+    // }
+
+    // function callSum2(num1,num2){
+    //   return sum.apply(this,[num1,num2]);//传入数组
+    // }
+
+    // console.log(callSum1(10,10));
+    // console.log(callSum2(10,10));
+    // 在上面这个例子中，`callSum1()` 在执行 `sum()` 函数时传入了 `this`（因为是在全局作用域中调用的，所以传入的就是 `window` 对象）和 `arguments` 对象。而 `callSum2` 同样也调用了 `sum()` 函数，但它传入的则是 `this` 和一个参数数组。这两个函数都会正常执行并返回正确的结果。
+
+    // `call()` 方法与 `apply()` 方法的作用相同，它们的区别仅在于接收参数的方式不同。对于 `call()` 方法而言，第一个参数是 `this` 值没有变化，变化的是其余参数都直接传递给函数。换句话说，在使用 `call()` 方法时，传递给函数的参数必须逐个列举出来，如下面的例子所示。
+
+    // function sum(num1,num2){
+    //   return num1+num2;
+    // }
+
+    // function callSum(num1,num2){
+    //   return sum.call(this,num1,num2);
+    // }
+
+    // console.log(callSum(10,10));  //20
+
+    // window.color = "red";
+    // var o = {color:"blue"};
+
+    // function sayColor(){
+    //   console.log(this.color);
+    // }
+    // sayColor();// red
+
+    // sayColor.call(this);// red
+    // sayColor.call(window);// red
+    // sayColor.call(o);//blue
+    // 这个例子是在前面说明 `this` 对象的示例基础上修改而成的。这一次，`sayColor()` 也是作为全局函数定义的，而且当在全局作用域中调用它时，它确实会显示 `"red"`，因为对 `this.color` 的求值会转换成对 `window.color` 的求值。而 `sayColor.call(this)` 和 `sayColor.call(window)`，则是两种显式地在全局作用域中调用函数的方式，结果当然都会显示 `"red"`。但是，当运行 `sayColor.call(o)` 时，函数的执行环境就不一样了，因为此时函数体内的 `this` 对象指向了 `o`，于是结果显示的是 `"blue"`。
+
+    // 使用 `call()` 或 `apply()` 来扩充作用域的最大好处，就是对象不需要与方法有任何耦合关系。在前面例子的第一个版本中，我们是先将 `sayColor()` 函数放到了对象 `o` 中，然后再通过 `o` 来调用它的；而在这里重写的例子中，就不需要先前那个多余的步骤了。
+
+    // var concat =function(){
+    //   var result = '';
+    //   for(var i = 0;i<arguments.length;i++){
+    //     result += arguments[i];
+    //   }
+    //   return result;
+    // }
+    // console.log(concat('bo','bo','bb')); //bobobb
+
+    // var fioacciSequece = function(count){
+    //   return(function(n){
+    //     if(n <=1){
+    //       return n ;
+    //     }else{
+    //       return arguments.callee(n-1)+arguments.callee(n-2)
+    //     }
+    //   }(--count));
+    // }
+    // console.log(fioacciSequece(12));// 0、1、1、2、3、5、8、13、21、34、55、[89]
+
+    // var arr = [2,3,4,[2,3,[2,3,4,2],5],3,5,[2,3,[2,3,4,2],2],4,3,6,2];
+    // var unique = function(arr){
+    //   var result =[];
+    //   (function(arr){
+    //     var f = arguments.callee;
+    //     arr.forEach(function(){
+    //       if(Array.isArray(arguments[0])){
+    //         f(arguments[0]);
+    //       }else{
+    //         if(result.indexOf(arguments[0])<0){
+    //           result.push(arguments[0]);
+    //         }
+    //       }
+    //     });
+    //   }(arr));
+    //   return result;
+    // }
+    // console.log(unique(arr));//[2, 3, 4, 5, 6]
+
+    //============================================================
+    //推荐写法
+    // var expression = /pattern/flags;
+
+    // 不推荐写法
+    // var expression = new RegExp(pattern, flags);
+
+    // - `g`：表示全局（global）模式，即模式将被应用于所有字符串，而非在发现第一个匹配项时立即停止；
+    // - `i`：表示不区分大小写（case-insensitive）模式，即在确定匹配项时忽略模式与字符串的大小写；
+    // - `m`：表示多行（multiline）模式，即在到达一行文本末尾时还会继续查找下一行中是否存在与模式匹配的项。
+
+    // 匹配字符串中所有"at"的实例
+    // var pattern1 = /at/g;
+
+    //匹配第一个“bat”或者“cat”，不区分大小写
+    // var pattern2 = /[bc]at/i;
+
+    //匹配所有以"at"结尾的3个字符的组合，不区分大小写
+    // var pattern3 = /.at/gi;
+
+    // 匹配所有".at"，不区分大小写
+    // var pattern4 = /\.at/gi;
+
+    // - `global`：布尔值，表示是否设置了 `g` 标志。
+    // - `ignoreCase`：布尔值，表示是否设置了 `i` 标志。
+    // - `lastIndex`：整数，表示开始搜索下一个匹配项的字符位置，从0算起。
+    // - `multiline`：布尔值，表示是否设置了 `m` 标志。
+    // - `source`：正则表达式的字符串表示，按照字面量形式而非传入构造函数中的字符串模式返回。
+
+    //=================正则先跳过
+
+
+    // var s1 = new String("some text");//创建一个实例
+    // var s2 = s1.substring(2);         //在实例上调用指定的方法;
+    // s1 = null;                        //销毁这个实例
+
+    // var obj = new Object("some text");
+    // console.log(obj instanceof String); // true
+
+    // var value = "25";
+    // var number = Number(value);  //转型函数
+    // console.log(typeof number);// "number"
+
+    // var obj = new Number(value); //构造函数
+    // console.log(typeof obj); // "object"
+
+    // var booleanObject = new Boolean(true);
+
+    // var falseObject = new Boolean(false);
+    // var result = falseObject && true;
+    // console.log(result); //true
+
+    // var falseValue =false;
+    // result = falseValue && true;
+    // console.log(result);  //false
+
+    // console.log(typeof falseObject);   // object
+    // console.log(typeof falseValue);    // boolean
+    // console.log(falseObject instanceof Boolean);  // true
+    // console.log(falseValue instanceof Boolean);   // false
+
+    // var numberObject = new Number(10);
+
+    // var num = 10;
+    // console.log(num.toString());     // "10"
+    // console.log(num.toString(2));    // "1010"
+    // console.log(num.toString(8));    // "12"
+    // console.log(num.toString(10));   // "10"
+    // console.log(num.toString(16));   // "a"
+
+
+    // var num = 10;
+    // console.log(num.toFixed(2));    // "10.00"
+
+    // var num = 10.005
+    // console.log(num.toFixed(2));    // "10.01"
+
+    // var num = 10;
+    // console.log(num.toExponential(1));
+
+    // var num = 99;
+    // console.log(num.toPrecision(1));// "1e+2"
+    // console.log(num.toPrecision(2));// "99"
+    // console.log(num.toPrecision(3));// "99.0"
+
+    // var numberObject = new Number(10);
+    // var numberValue = 10;
+    // console.log(typeof numberObject);   // "object"
+    // console.log(typeof numberValue);    // "number"
+    // console.log(numberObject instanceof Number);  // true
+    // console.log(numberValue instanceof Number);   // false
+
+    // var stringObject = new String("hello world");
+
+    // var stringValue = "hello world";
+    // console.log(stringValue.length);     // 11
+
+    // var stringValue = "大家好";
+    // console.log(stringValue.length);     // 3
+
+    // var stringValue = "hello world";
+    // console.log(stringValue.charAt(1));  // "e"
+
+    // var stringValue = "hello world";
+    // console.log(stringValue.charCodeAt(1));  // 101，101是小写字母"e"的字符编码
+
+    // var stringValue = "hello world";
+    // console.log(stringValue[1]);   // "e"
+
+    // var stringValue = "hello ";
+    // var result = stringValue.concat("world");
+
+    // console.log(result);        // "hello world"
+    // console.log(stringValue);   // "hello"
+
+    // var stringValue = "hello ";
+    // var result = stringValue.concat("world", "!");
+
+    // console.log(result);        // "hello world!"
+    // console.log(stringValue);   // "hello"
+
+    // `slice()`、`substr()` 和 `substring()`。这三个方法都会返回被操作字符串的一个子字符串，而且也都接受一或两个参数。第一个参数指定子字符串的开始位置，第二个参数（在指定的情况下）表示子字符串到哪里结束。具体来说，`slice()` 和 `substring()` 的第二个参数指定的是子字符串最后一个字符后面的位置。而 `substr()` 的第二个参数指定的则是返回的字符个数。如果没有给这些方法传递第二个参数，则将字符串的长度作为结束位置。与 `concat()` 方法一样，`slice()`、`substr()` 和 `substring()`也不会修改字符串本身的值，它们只是返回一个基本类型的字符串值，对原始字符串没有任何影响。请看下面的例子。
+    // var stringValue = "hello world";
+    // console.log(stringValue.slice(3));            // "lo world"
+    // console.log(stringValue.substring(3));        // "lo world"
+    // console.log(stringValue.substr(3));           // "lo world"
+    // console.log(stringValue.slice(3, 7));         // "lo w"
+    // console.log(stringValue.substring(3,7));      // "lo w"
+    // console.log(stringValue.substr(3, 7));        // "lo worl"
+    // 在传递给这些方法的参数是负值的情况下，它们的行为就不尽相同了。其中，`slice()` 方法会将传入的负值与字符串的长度相加，`substr()` 方法将负的第一个参数加上字符串的长度，而将负的第二个参数转换为0。最后，`substring()` 方法会把所有负值参数都转换为0。下面来看例子。
+    // var stringValue = "hello world";
+    // console.log(stringValue.slice(-3));           // "rld"
+    // console.log(stringValue.substring(-3));       // "hello world"
+    // console.log(stringValue.substr(-3));          // "rld"
+    // console.log(stringValue.slice(3, -4));        // "lo w"
+    // console.log(stringValue.substring(3, -4));    // "hel"
+    // console.log(stringValue.substr(3, -4));       //""（空字符串）
+
+    // 有两个可以从字符串中查找子字符串的方法：`indexOf()` 和 `lastIndexOf()`。这两个方法都是从一个字符串中搜索给定的子字符串，然后返子字符串的位置（如果没有找到该子字符串，则返回-1）。这两个方法的区别在于：`indexOf()` 方法从字符串的开头向后搜索子字符串，而 `lastIndexOf()` 方法是从字符串的末尾向前搜索子字符串。还是来看一个例子吧。
+    // var stringValue = "hello world";
+    // console.log(stringValue.indexOf("o"));             // 4
+    // console.log(stringValue.lastIndexOf("o"));         // 7
+
+    // 这两个方法都可以接收可选的第二个参数，表示从字符串中的哪个位置开始搜索。换句话说，indexOf()会从该参数指定的位置向后搜索，忽略该位置之前的所有字符；而lastIndexOf()则会从指定的位置向前搜索，忽略该位置之后的所有字符。看下面的例子。
+    // var stringValue = "hello world";
+    // console.log(stringValue.indexOf("o", 6));          // 7
+    // console.log(stringValue.lastIndexOf("o", 6));      // 4
+
+    // 在使用第二个参数的情况下，可以通过循环调用 `indexOf()` 或 `lastIndexOf()` 来找到所有匹配的子字符串，如下面的例子所示：
+    // var stringValue = "Lorem ipsum dolor sit amet, consectetur adipisicing elit";
+    // var positions = new Array();
+    // var pos = stringValue.indexOf("e",pos +1);
+
+    // while(pos>-1){
+    //   positions.push(pos);
+    //   pos = stringValue.indexOf("e",pos+1);
+    // }
+    // console.log(positions);//[3, 24, 32, 35, 52]
+
+    // var stringValue = "   hello world   ";
+    // var trimmedStringValue = stringValue.trim();
+    // console.log(stringValue);            // "   hello world   "
+    // console.log(trimmedStringValue);     // "hello world" 
+
+    // var stringValue = "hello world";
+    // console.log(stringValue.toLocaleUpperCase());  // "HELLO WORLD"
+    // console.log(stringValue.toUpperCase());        // "HELLO WORLD"
+    // console.log(stringValue.toLocaleLowerCase());  // "hello world"
+    // console.log(stringValue.toLowerCase());        // "hello world"
+
+    // `String` 类型定义了几个用于在字符串中匹配模式的方法。第一个方法就是 `match()`，在字符串上调用这个方法，本质上与调用 `RegExp` 的 `exec()` 方法相同。`match()` 方法只接受一个参数，要么是一个正则表达式，要么是一个 `RegExp` 对象。来看下面的例子。
+    // var text = "cat, bat, sat, fat"; 
+    // var pattern = /.at/;
+
+    //与pattern.exec(text)相同
+    // var matches = text.match(pattern);
+    // console.log(matches.index);// 0
+    // console.log(matches[0]);// "cat"
+    // console.log(pattern.lastIndex);// 0
+
+    // 另一个用于查找模式的方法是 `search()`。这个方法的唯一参数与 `match()` 方法的参数相同：由字符串或 `RegExp` 对象指定的一个正则表达式。`search()` 方法返回字符串中第一个匹配项的索引；如果没有找到匹配项，则返回-1。而且，`search()` 方法始终是从字符串开头向后查找模式。看下面的例子。
+    // var text = "cat, bat, sat, fat"; 
+    // var pos = text.search(/at/);
+    // console.log(pos);  //1，即"at"第一次出现的位置
+
+    // 为了简化替换子字符串的操作，JavaScript 提供了 `replace()` 方法。这个方法接受两个参数：第一个参数可以是一个 `RegExp` 对象或者一个字符串（这个字符串不会被转换成正则表达式），第二个参数可以是一个字符串或者一个函数。如果第一个参数是字符串，那么只会替换第一个子字符串。要想替换所有子字符串，唯一的办法就是提供一个正则表达式，而且要指定全局 `g` 标志，如下所示。
+
+    // var text = "cat, bat, sat, fat"; 
+    // var result = text.replace("at","ond");
+    // console.log(result); //cond, bat, sat, fat
+
+    // result=text.replace(/at/g,"ond");
+    // console.log(result);//"cond, bond, sond, fond"
+
+    // 最后一个与模式匹配有关的方法是 `split()`，这个方法可以基于指定的分隔符将一个字符串分割成多个子字符串，并将结果放在一个数组中。分隔符可以是字符串，也可以是一个 `RegExp` 对象（这个方法不会将字符串看成正则表达式）。`split()` 方法可以接受可选的第二个参数，用于指定数组的大小，以便确保返回的数组不会超过既定大小。请看下面的例子。
+
+    // var colorText = "red,blue,green,yellow";
+    // var colors1= colorText.split(",");// ["red", "blue", "green", "yellow"]
+    // var colors2 = colorText.split(",",2);// ["red", "blue"]
+
+
+    // 这个方法比较两个字符串，并返回下列值中的一个：
+
+    // - 如果字符串在字母表中应该排在字符串参数之前，则返回一个负数（大多数情况下是-1，具体的值要视实现而定）；
+    // - 如果字符串等于字符串参数，则返回0；
+    // - 如果字符串在字母表中应该排在字符串参数之后，则返回一个正数（大多数情况下是1，具体的值同样要视实现而定）。
+    // var stringValue = "yellow";       
+    // console.log(stringValue.localeCompare("brick"));    // 1
+    // console.log(stringValue.localeCompare("yellow"));   // 0
+    // console.log(stringValue.localeCompare("zoo"));      // -1
+
+    // function determineOrder(value){
+    //   var result = stringValue.localeCompare(value);
+    //   if(result <0){
+    //     console.log("The string 'yellow' comes before the string '" + value + "'.");
+    //   }else if(result > 0){
+    //     console.log("The string 'yellow' comes after the string '" + value + "'.");
+    //   }else{
+    //     console.log("The string 'yellow' is equal to the string '" + value + "'.");
+    //   }
+    // }
+
+    // determineOrder("brick");
+    // determineOrder("yellow");
+    // determineOrder("zoo");
+
+    // console.log(String.fromCharCode(104, 101, 108, 108, 111)); // "hello"
+    // var s = 'hello';
+    // for(let i=0;i<s.length;i++){
+    //   console.log(`${s[i]}----${s[i].charCodeAt()}`);
+    // }
+
+    /*
+    "h----104"
+    "e----101"
+    "l----108"
+    "l----108"
+    "o----111"
+    */
+
+    // var falseObject = new Object(false);
+    // console.log(typeof falseObject);             // object
+    // console.log(falseObject instanceof Object);  // true
+    // console.log(falseObject instanceof Boolean); // true
+
+    // var numberObject = new Object(100);
+    // console.log(typeof numberObject);             // object
+    // console.log(numberObject instanceof Object);  // true
+    // console.log(numberObject instanceof Number);  // true
+
+    // var stringObject = new Object("abcde");
+    // console.log(typeof stringObject);             // object
+    // console.log(stringObject instanceof Object);  // true
+    // console.log(stringObject instanceof String);  // true
+
+    // var reverse = function(str){
+    //   return str.split('').reverse().join('');
+    // }
+    // console.log(reverse("hello"));// "olleh"
+
+
+
+    // var uri = "http://shijiajie.com/illegal value.htm#start";
+    // console.log(encodeURI(uri));// "http://shijiajie.com/illegal%20value.htm#start"
+    // console.log(encodeURIComponent(uri));// "http%3A%2F%2Fshijiajie.com%2Fillegal%20value.htm%23start"
+
+    // var uri = "http%3A%2F%2Fshijiajie.com%2Fillegal%20value.htm%23start";
+    // console.log(decodeURI(uri));// http%3A%2F%2Fshijiajie.com%2Fillegal value.htm%23start
+    // console.log(decodeURIComponent(uri));// http://shijiajie.com/illegal value.htm#start
+
+    // eval("console.log('hi')"); 等价于 console.log("hi");  //只接受一个参数
+
+    // var msg = "hello world";
+    // eval("console.log(msg)");    // "hello world"
+
+    // eval("function sayHi() { console.log('hi'); }");
+    // sayHi();    // "hi"
+
+    // eval("var msg = 'hello world';");
+    // console.log(msg);     // "hello world"
+
+    // "use strict";
+    // eval = "hi";   // causes error
+    // 严格模式下，在外部访问不到 `eval()` 中创建的任何变量或函数，因此前面两个例子都会导致错误。同样，在严格模式下，为 `eval` 赋值也会导致错误：
+
+    // var color = "red";
+
+    // function sayColor(){
+    //   console.log(window.color);
+    // }
+
+    // window.sayColor();  // "red"
+
+
+    // var max = Math.max(3, 54, 32, 16);
+    // console.log(max);    // 54
+
+    // var min = Math.min(3, 54, 32, 16);
+    // console.log(min);    // 3
+
+    // var values = [1, 2, 3, 4, 5, 6, 7, 8];
+    // var max = Math.max.apply(Math,values);
+    // console.log(max);// 8
+
+    // - `Math.ceil()` 执行向上舍入，即它总是将数值向上舍入为最接近的整数；
+    // - `Math.floor()` 执行向下舍入，即它总是将数值向下舍入为最接近的整数；
+    // - `Math.round()` 执行标准舍入，即它总是将数值四舍五入为最接近的整数。
+
+    // console.log(Math.ceil(25.9));     // 26
+    // console.log(Math.ceil(25.5));     // 26
+    // console.log(Math.ceil(25.1));     // 26
+
+    // console.log(Math.round(25.9));    // 26
+    // console.log(Math.round(25.5));    // 26
+    // console.log(Math.round(25.1));    // 25
+
+    // console.log(Math.floor(25.9));    // 25
+    // console.log(Math.floor(25.5));    // 25
+    // console.log(Math.floor(25.1));    // 25
+
+    // 值 = Math.floor(Math.random() * 可能值的总数 + 第一个可能的值)
+
+    // function selectFrom(lowerValue,upperValue){
+    //   var choices = upperValue - lowerValue +1;
+    //   return Math.floor(Math.random()*choices+lowerValue)
+    // }
+
+    // var num = selectFrom(2,10);
+    // console.log(num);   // 介于2和10之间（包括2和10）的一个数值
+
+    // | Math.abs(num) | 返回num的绝对值 |
+    // | Math.asin(x) | 返回x的反正弦值 |
+    // | Math.exp(num) | 返回Math.E的num次幂 |
+    // | Math.atan(x) | 返回x的反正切值 |
+    // | Math.log(num) | 返回num的自然对数 |
+    // | Math.atan2(y,x) | 返回y/x的反正切值 |
+    // | Math.pow(num,power) | 返回num的power次幂 |
+    // | Math.cos(x) | 返回x的余弦值 |
+    // | Math.sqrt(num) | 返回num的平方根 |
+    // | Math.sin(x) | 返回x的正弦值 |
+    // | Math.acos(x) | 返回x的反余弦值 |
+    // | Math.tan(x) | 返回x的正切值 |
+
+    // 如何高效产生m个n范围内的不重复随机数（m<n)
+    // var getRandomNumber = function (n, m) {
+
+    //   if (typeof n !== 'number' || typeof m !== 'number') {
+    //     throw Error('m和n必须是数字！');
+    //   }
+
+    //   if (m >= n) {
+    //     throw Erroe('m必须小于n!');
+    //   }
+
+    //   var arr = [],
+    //     result = [],
+    //     i = 0,
+    //     j = 0,
+    //     tempNumber = 0,
+    //     randomNumber = 0;
+
+    //     function selectFrom(lowerValue,upperValue){
+    //       var choices = upperValue - lowerValue +1;
+    //       return Math.floor(Math.random()*choices+lowerValue);
+    //     }
+
+    //     for(;i<n;i++){
+    //       arr[i] = i;
+    //     }
+
+    //     for(;j<m;j++){
+    //       randomNumber = selectFrom(j,n-1);
+    //       tempNumber = arr[j];
+    //       arr[j] = arr[randomNumber];
+    //       arr[randomNumber] = tempNumber;
+    //       result.push(arr[j]);
+    //     }
+
+    //     return result;
+    // }
+
+    // console.log(getRandomNumber(100,50));
+
+//     假设取50个100范围内的不重复随机数，思路分析：
+
+// 第1步，为数组的每个数字按其位置（**数组的下标**）赋值，我们获得一个 **100个数字**、**顺序排列** 的数组。
+
+// 第2步，开始取 i-99 范内的随机数，把每次取到的随机数作为位置（**数组的下标**）与位置（**数组的下标**）为 i 的数交换数值。这样做的意义是，将已经取到的随机数在取值范围中排除，下一次仅会在剩下的数字中取随机数。
+
+// 第2步不太容易理解，举个栗子：假设第一次取到的随机数是39，把 **位置39的数** 与 **位置0的数** 交换之后，再从 **位置1** 开始看该数组，你会惊奇的发现，剩下的是0-99除39以外的所有数字，但它们的位置是1-99，接下来我们仅需要从1-99中取一个随机数，作为数组下标，即可在剩下的数字中取随机数了，以此类推。
+
+// - `Math.random()` 方法返回介于0和1之间一个随机数，不包括0和1。
+// - `Math.floor()` 执行向下舍入，即它总是将数值向下舍入为最接近的整数。
+
+  </script>
+</body>
+
+</html>

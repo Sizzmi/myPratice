@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    // 全局中的this
+    //在全局运行上下文中（任何函数体外部）this指代全局对象，无论是否在严格模式中
+  console.log(this.document === document);//true
+  // 在浏览器中，全局对象为 window 对象
+  console.log(this === window);//true
+  this.a =37;
+  console.log(window.a);// 37
+
+
+  //====================================================
+  // 构造函数中的this
+//如果调用一个函数使用了new关键词，函数内的this绑定一个新对象，即：它的this与即将被创建的新对象绑定
+function ConstructorExample(){
+  console.log(this);//ConstructorExample {}
+  this.value = 10;
+  console.log(this);//ConstructorExample {value: 10}
+}
+
+new ConstructorExample();
+
+// 注意：当构造器返回的默认值是一个this引用的对象时，可以手动设置返回其他的对象，如果返回值不是一个对象，返回this。
+function C(){
+  console.log(this);//C {}
+  this.a=37;
+  console.log(this);//C {a: 37}
+}
+
+var o = new C();
+
+console.log(o.a);//37
+
+function C2(){
+  console.log(this);//C2 {}
+  this.a=37;
+  console.log(this);//C2 {a: 37}
+  return {a:38};
+}
+
+o = new C2();
+
+console.log(o.a);//38
+
+// 在最后的例子中C2，因为在调用构造函数的过程中，手动的设置了返回对象，与this绑定的默认对象被取消（本质上这使得语句this.a = 37成了“僵尸”代码，实际上并不是真正的“僵尸”，这条语句执行了但是对于外部没有任何影响，因此完全可以忽略它）。
+
+
+//====================================================
+// 构造函数prototype属性时，this的指向
+function foo(){
+  console.log(this);//foo {}
+  this.x =10;
+}
+
+foo.prototype.getX = function(){
+  console.log(this);//foo {x: 10}
+  console.log(this.x);//10
+}
+
+var bar = new foo();
+
+bar.getX();
+
+//==================================================================
+// call和apply中的this
+// 当一个函数的函数提中使用了this时，通过所有函数都从function对象的原型中继承的call()和apply()方法调用时，它的值可以绑定到一个指定对象上。
+
+function sum(c,d){
+  console.log(this);//{a: 1, b: 3}
+  return this.a+this.b+c+d;
+}
+
+var o ={
+  a:1,
+  b:3
+}
+
+sum.call(o,5,7);//16
+
+sum.apply(o,[10,20]);//34
+
+//====================================================================
+function f(){
+  console.log(this);
+  return this.a;
+}
+
+var g =f.bind({a:'azerty'});
+
+console.log(g());//azerty
+
+var o ={
+  a:37,
+  f:f,
+  g:g
+}
+console.log(o.f(),o.g());
+  </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+function startMove(element,obj,speed,fn){<br /><br />
+    clearInterval(element.timer)<br /><br />
+    element.timer = setInterval(function(){<br /><br />
+        //计时器每次刷新isComplete状态<br /><br />
+        var isComplete = true;<br /><br />
+        //通过for  in  获得对象中的属性  和 属性值<br /><br />
+        for(var attr in obj){<br /><br />
+            //获取 当前页面内目标的样式 并通过计时器实时刷新 调用getStyle方法<br /><br />
+            var current = Math.round(parseFloat(getStyle(element,attr)));<br /><br />
+            //如果取不到或者 取到返回的不为num类型 定义为0<br /><br />
+            if(!current){<br /><br />
+                current = 0;<br /><br />
+            }<br /><br />
+            //减速运动框架<br /><br />
+//          var speed = (obj[attr]-current)/10;<br /><br />
+//          if(speed<0){<br /><br />
+//              speed = Math.floor(speed);<br /><br />
+//          }else if(speed>0){<br /><br />
+//              speed = Math.ceil(speed);<br /><br />
+//          }<br /><br />
+            //判断运动是否结束<br /><br />
+            if(obj[attr]==current){</p><br />
+<p>            }else{<br /><br />
+                element.style[attr]=current+speed+”px”;<br /><br />
+                isComplete = false;<br /><br />
+            }<br /><br />
+        }<br /><br />
+        //运动结束 清空计时器<br /><br />
+        if(isComplete){<br /><br />
+            clearInterval(element.timer);<br /><br />
+            if(fn){<br /><br />
+                fn();<br /><br />
+            }<br /><br />
+        }<br /><br />
+    },20);<br /><br />
+}</p><br />
+<p>//获得内敛样式<br /><br />
+function getStyle(element,attr){<br /><br />
+    if(element.currentStyle){<br /><br />
+        return element.currentStyle[attr];                  //IE<br /><br />
+    }else{<br /><br />
+        return window.getComputedStyle(element,false)[attr];//非IE<br /><br />
+    }<br /><br />
+}
