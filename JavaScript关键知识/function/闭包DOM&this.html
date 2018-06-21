@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <!-- <button id="btn" type="button">click</button> -->
+  <!-- <button onclick="alert(this.tagName.toLowerCase());">
+    Show this
+  </button> -->
+  <!-- <button onclick="alert((function(){return this})());">
+      Show inner this
+    </button> -->
+  <script>
+
+  // 一般来讲，当函数使用 `addEventListener`，被用作事件处理函数时，它的 `this` 指向触发事件的元素。如下代码所示：
+ // var btn = document.getElementById("btn");
+  // btn.addEventListener("click",function(){
+  //   this.style.backgroundColor = "#A5D9F3"
+  // },false);
+
+  
+  // 但在 IE 浏览器中，当函数使用 `attachEvent` ，被用作事件处理函数时，它的 `this` 却指向 `window`。如下代码所示：
+    // var btn = document.getElementById("btn");
+    // btn.attachEvent("onclick",function(){
+    //   console.log(this === window); //true
+    // })
+
+// #### 内联事件处理函数中的 `this`
+
+// 当代码被内联处理函数调用时，它的 `this` 指向监听器所在的 DOM 元素。如下代码所示：
+
+// ```html
+// <button onclick="alert(this.tagName.toLowerCase());">
+//   Show this
+// </button>
+// ```
+// 上面的 `alert` 会显示 `button`，注意只有外层代码中的 `this` 是这样设置的。如果 `this` 被包含在匿名函数中，则又是另外一种情况了。如下代码所示：
+
+// ```html
+// <button onclick="alert((function(){return this})());">
+//   Show inner this
+// </button>
+// ```
+//在这种情况下，this被包含在匿名函数中，相当于处于全局上下文中，所以它指向 `window` 对象。
+
+// 局部变量的优先级高于同名的全局变量。
+// 函数可以记忆它被创建时候的环境，可以读取上层函数内部的变量。
+// this 指代的是调用函数的那个对象，如无指代的对象，则为全局对象。
+
+// function func1(){
+//   function func2(){
+//     console.log(this);
+//   }
+//   return func2;
+// }
+// func1()();  //window
+
+// 执行过程如下：
+// func1() 在全局作用域下被执行，然后返回一个函数func2(),
+// 因为func1()只是函数不是对象，func1()已结执行完了，就相当于已经不存在了。
+// 然后，继续执行func2(), 此时的func2()不会受到已经不存在的func1()的影响，也是出于全局作用域下的，所以最终结果this是指向window的。
+
+// 如果想让 func2() 中的 this 指向 func1()，可以把以上代码作如下改造：
+// function func1(){}
+// func1.func2 = function(){
+//   console.log(this);
+// }
+// func1.func2();// func1(){}
+//=====================================
+// function func1(){
+//   return this;
+// }
+
+// var obj = {};
+// obj.func2 = function(){
+//   return this;
+// };
+
+// console.log(func1() === window); // true 当函数以函数调用
+// console.log(obj.func2() === obj); //  true 当函数以对象的方法调用
+
+// 所以在全局作用域中调用函数 func1() 等同于 window.func1()，所以函数 func1() 中的 this 是指向 window，也就是指向全局对象。
+
+//=====================================================
+// scope = "bobo";
+
+// function Func(){
+//   var scope = "baba";
+
+//   function inner(){
+//     console.log(scope);
+//   }
+//   return inner;
+// }
+
+// var ret = Func();
+// ret();//baba
+
+//========================================================
+// scope = "bobo"
+
+// function Func(){
+//   var scope = "sophie";
+
+//   function inner(){
+//     console.log(scope);
+//   }
+//   scope = "mimi";
+//   return inner;
+// }
+
+// var ret = Func();
+// ret(); //mimi
+
+// 虽然在内部函数 `inner()` 被创建时，局部变量 `scope` 的值为 `"sophie"`，但当函数执行到 `return inner` 时，局部变量 `scope` 的值已被更新为 `"mimi"`，所以最终输出的结果为 `"mimi"`。
+// - 注意：`inner()` 函数的局部变量 `scope` 记录的并不是创建瞬间的值，而是指向 `Func()` 函数的局部变量的 `scope` 的指针，「内部函数的变量」会随着「外层函数的变量」的值一起发生改变。
+
+//===========================================================
+
+// scope = "bobo"
+
+// function Bar(){
+//   console.log(scope);
+// }
+
+// function Func(){
+//   var scope = "sophie";
+//   return Bar;
+// }
+
+// var ret = Func();
+// ret(); //bobo
+
+//====================================
+// var name = "The Window";
+// var object = {
+//   name:"My Object",
+//   getNameFunc:function(){
+//     return function(){
+//       return this.name;
+//     };
+//   }
+// };
+// console.log(object.getNameFunc()()); // "The Window"
+
+// var name = "The Window";
+// var object = {
+//   name:"My Object",
+//   getNameFunc:function(){
+//     var that = this;
+//     return function(){
+//       return that.name;
+//     };
+//   }
+// };
+// console.log(object.getNameFunc()()); //My Object
+
+
+  </script>
+</body>
+</html>

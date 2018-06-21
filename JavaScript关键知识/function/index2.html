@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    //   ### 全局作用域
+
+    // 由于 `window` 对象同时扮演着 ECMAScript 中 `Global` 对象的角色，因此所有在全局作用域中声明的变量、函数都会变成 `window` 对象的属性和方法。来看下面的例子。
+
+    // var age = 29;
+    // function sayAge(){
+    //   console.log(this.age);
+    // }
+
+    // console.log(window.age);// 29
+    // sayAge();// 29
+    // window.sayAge();// 29
+
+    // 抛开全局变量会成为 `window` 对象的属性不谈，定义全局变量与在 `window` 对象上直接定义属性还是有一点差别：全局变量不能通过 `delete` 运算符删除，而直接在 `window` 对象上的定义的属性可以。例如：
+
+    // var age = 29;
+    // window.color = "red";
+
+    // delete window.age;
+    // delete window.color;        // return true
+
+    // console.log(window.age);    // 29
+    // console.log(window.color);  // undefined
+
+    // | fullscreen | yes或no | 表示浏览器窗口是否最大化。仅限IE |
+    // | height | 数值 | 表示新窗口的高度。不能小于100 |
+    // | left | 数值 | 表示新窗口的左坐标。不能是负值 |
+    // | location | yes或no | 表示是否在浏览器窗口中显示地址栏。不同浏览器的默认值不同。如果设置为no，地址栏可能会隐藏，也可能会被禁用（取决于浏览器） |
+    // | menubar | yes或no | 表示是否在浏览器窗口中显示菜单栏。默认值为no |
+    // | resizable | yes或no | 表示是否可以通过拖动浏览器窗口的边框改变其大小。默认值为no |
+    // | scrollbars | yes或no | 表示如果内容在视口中显示不下，是否允许滚动。默认值为no |
+    // | status | yes或no | 表示是否在浏览器窗口中显示状态栏。默认值为no |
+    // | toolbar | yes或no | 表示是否在浏览器窗口中显示工具栏。默认值为no |
+    // | top | 数值 | 表示新窗口的上坐标。不能是负值 |
+    // | width | 数值 | 表示新窗口的宽度。不能小于100 |
+
+    // 这行代码会打开一个新的可以调整大小的窗口，窗口初始大小为400×400像素，并且距屏幕上沿和左边各10像素。
+    // window.open("http://baidu.com/","newWindow",
+    //     "height=400,width=400,top=10,left=10,resizable=yes");
+    // 调整大小
+    // win.resizeTo(500,500);
+
+    // 移动位置
+    // win.moveTo(100,100);
+
+    // 关闭窗口
+    // win.close();
+    // console.log(win.opener === window);   // true
+
+    // #### 弹出窗口屏蔽程序
+    // var blocked = false;
+
+    // try {
+    //     var win = window.open("http://baidu.com", "_blank");
+    //     if (win == null){
+    //         blocked = true;
+    //     }
+    // } catch (ex){
+    //     blocked = true;
+    // }
+    // if (blocked){
+    //     console.log("The popup was blocked!");
+    // }
+
+    // 不建议传递字符串
+    // setTimeout("console.log('Hello world!') ", 1000);
+
+    // setTimeout(function(){
+    //   console.log("Hello world!");
+    // },1000);
+
+    // 注意：把它取消
+    // clearTimeout(timeoutId);
+
+    // 只要是在指定的时间尚未过去之前调用 `clearTimeout()`，就可以完全取消超时调用。前面的代码在设置超时调用之后马上又调用了 `clearTimeout()`，结果就跟什么也没有发生一样。
+
+    // 间歇调用与超时调用类似，只不过它会按照指定的时间间隔重复执行代码，直至间歇调用被取消或者页面被卸载。设置间歇调用的方法是 `setInterval()`，它接受的参数与 `setTimeout()` 相同：要执行的代码（字符串或函数）和每次执行之前需要等待的毫秒数。下面来看一个例子。
+
+
+    // 调用 `setInterval()` 方法同样也会返回一个间歇调用 `ID`，该 `ID` 可用于在将来某个时刻取消间歇调用。要取消尚未执行的间歇调用，可以使用 `clearInterval()` 方法并传入相应的间歇调用 `ID`。取消间歇调用的重要性要远远高于取消超时调用，因为在不加干涉的情况下，间歇调用将会一直执行到页面卸载。以下是一个常见的使用间歇调用的例子。
+
+    // var num = 0;
+    // var max = 10;
+    // var intervalId = null;
+
+    // function incrementNumber() {
+    //   num++;
+    //   // 如果执行次数达到了max设定的值，则取消后续尚未执行的调用
+    //   if (num == max) {
+    //     clearInterval(intervalId);
+    //     console.log("Done");
+    //   }
+    // }
+
+    // intervalId = setInterval(incrementNumber, 500);
+
+    // 在这个例子中，变量num每半秒钟递增一次，当递增到最大值时就会取消先前设定的间歇调用。这个模式也可以使用超时调用来实现，如下所示
+
+    // var num = 0,
+    //   max = 10;
+
+    //   function incrementNumber(){
+    //     num ++;
+
+    //     // 如果执行次数未到达max设定的值，则设置另一次超时调用
+    //     if(num < max ){
+    //       setTimeout(incrementNumber,500);
+    //     }else{
+    //       console.log("Done");
+    //     }
+    //   }
+
+    //   setTimeout(incrementNumber,500);
+    // 可见，在使用超时调用时，没有必要跟踪超时调用 `ID`，因为每次执行代码之后，如果不再设置另一次超时调用，调用就会自行停止。一般认为，使用超时调用来模拟间歇调用的是一种最佳模式。在开发环境下，很少使用真正的间歇调用，原因是后一个间歇调用可能会在前一个间歇调用结束之前启动。而像前面示例中那样使用超时调用，则完全可以避免这一点。所以，最好不要使用间歇调用。
+
+
+    // var result = prompt("你是谁？","");
+    // if(result !== null){
+    //   alert("welcome,"+result);
+    // }
+
+    // | 属性名 | 例子 | 说明 |
+    // | --- | --- | --- |
+    // | hash | "#contents" | 返回 URL 中的 hash（#号后跟零或多个字符），如果 URL 中不包含散列，则返回空字符串 |
+    // | host | "baidu.com:80" | 返回服务器名称和端口号（如果有）
+    // | hostname | "baidu.com" | 返回不带端口号的服务器名称 |
+    // | href | "http:/baidu.com" | 返回当前加载页面的完整URL。而 `location` 对象的 `toString()` 方法也返回这个值 |
+    // | pathname | "/WileyCDA/" | 返回URL中的目录和（或）文件名 |
+    // | port | "8080" | 返回 URL 中指定的端口号。如果 URL 中不包含端口号，则这个属性返回空字符串 |
+    // | protocol | "http:" | 返回页面使用的协议。通常是 http: 或 https:
+    // | search | "?q=javascript" | 返回URL的查询字符串。这个字符串以问号开头 |
+
+
+
+    /*
+     * 这个函数用来解析来自URL的查询串中的name=value参数对
+     * 它将name=value对存储在一个对象的属性中，并返回该对象
+     * 这样来使用它
+     *
+     var args = urlArgs(); //从URL中解析参数
+     var q = args.q || ""; //如果参数定义了的话就使用参数：否则使用一个默认值
+     var n = args.n ? parseInt(args.n):10;
+     */
+
+    // function urlArgs() {
+    //   var args = {};                               //定义一个空对象
+    //   var query = location.search.substring(1);    //查找到查询串，并去掉'?'
+    //   var pairs = query.split("&");                //根据“&”符号将查询字符串分隔开
+    //   for (var i = 0; i < pairs.length; i++) {         //对于每个片段
+    //     var pos = pairs[i].indexOf('=');          //查找“name=value”
+    //     if (pos == -1) continue;                    //如果没有找到的话，就跳过
+    //     var name = pairs[i].substring(0, pos);      //提取name
+    //     var value = pairs[i].substring(pos + 1);    //提取value
+    //     value = decodeURIComponent(value);          //对value进行解码
+    //     args[name] = value;                       //存储为属性
+    //   }
+    //   return args;                                //返回解析后的参数
+    // }
+
+    //     ### 位置操作
+
+    // 使用 `location` 对象可以通过很多方式来改变浏览器的位置。首先，也是最常用的方式，就是使用 `assign()`方法并为其传递一个 URL，如下所示。
+
+    // location.assign("http://baidu.com");
+
+    // 这样，就可以立即打开新URL并在浏览器的历史记录中生成一条记录。如果是将 `location.href` 或 `window.location` 设置为一个URL值，也会以该值调用 `assign()` 方法。例如，下列两行代码与显式调用 `assign()` 方法的效果完全一样。
+
+    // window.location = "http://baidu.com";
+    // location.href = "http://baidu.com";
+
+    // 在这些改变浏览器位置的方法中，最常用的是设置 `location.href` 属性。
+
+    // 另外，修改 `location` 对象的其他属性也可以改变当前加载的页面。下面的例子展示了通过将 `hash`、`search`、`hostname`、`pathname` 和 `port` 属性设置为新值来改变 URL。
+
+    //假设初始URL为 http://baidu.com/about/
+    // location.href = "http://baidu.com/about/"
+
+    // 将 URL 修改为 "http://baidu.com/about/#ds-thread"
+    // location.hash = '#ds-thread';
+
+    //将 URL 修改为 "http://baidu.com/about/?args=123"
+    // location.search = "?args=123";
+
+    // 将 URL 修改为 "https://segmentfault.com/"
+    // location.hostname = "segmentfault.com";
+
+    //将 URL 修改为 "http://segmentfault.com/u/bobo11/"
+    // location.pathname = "u/bobo11";
+
+    // 将 URL 修改为 "https://segmentfault.com:8080/"
+    // location.prot = 8080;
+
+    // 当通过上述任何一种方式修改URL之后，浏览器的历史记录中就会生成一条新记录，因此用户通过单击“后退”按钮都会导航到前一个页面。要禁用这种行为，可以使用 `replace()` 方法。这个方法只接受一个参数，即要导航到的 URL；结果虽然会导致浏览器位置改变，但不会在历史记录中生成新记录。在调用 `replace()` 方法之后，用户不能回到前一个页面，来看下面的例子：
+
+    // <!DOCTYPE html>
+    // <html>
+    // <head>
+    //     <title>You won't be able to get back here</title>
+    // </head>
+    //     <body>
+    //     <p>Enjoy this page for a second, because you won't be coming back here.</p>
+    //     <script type="text/javascript">
+    //         setTimeout(function () {
+    //             location.replace("http://baidu.com/");
+    //         }, 1000);
+
+    //  与位置有关的最后一个方法是 `reload()`，作用是重新加载当前显示的页面。如果调用 `reload()` 时不传递任何参数，页面就会以最有效的方式重新加载。也就是说，如果页面自上次请求以来并没有改变过，页面就会从浏览器缓存中重新加载。如果要强制从服务器重新加载，则需要像下面这样为该方法传递参数 `true`。 
+
+    // location.reload();  //重新加载（有可能从缓存中加载）
+    // location.reload(true); //重新加载（从服务器重新加载）
+    // 位于 `reload()` 调用之后的代码可能会也可能不会执行，这要取决于网络延迟或系统资源等因素。为此，最好将 `reload()` 放在代码的最后一行。
+
+    // `history` 对象保存着用户上网的历史记录，从窗口被打开的那一刻算起。因为 `history` 是 `window` 对象的属性，因此每个浏览器窗口、每个标签页乃至每个框架，都有自己的 `history` 对象与特定的 `window` 对象关联。出于安全方面的考虑，开发人员无法得知用户浏览过的 URL。不过，借由用户访问过的页面列表，同样可以在不知道实际 URL 的情况下实现后退和前进。
+
+    // 使用 `go()` 方法可以在用户的历史记录中任意跳转，可以向后也可以向前。这个方法接受一个参数，表示向后或向前跳转的页面数的一个整数值。负数表示向后跳转（类似于单击浏览器的“后退”按钮），正数表示向前跳转（类似于单击浏览器的“前进”按钮）。来看下面的例子。
+
+    // 后退一页
+    // history.go(-1);
+
+    //前进一页
+    // history.go(1);
+
+    //前进两页
+    // history.go(2);
+
+    // 也可以给 `go()` 方法传递一个字符串参数，此时浏览器会跳转到历史记录中包含该字符串的第一个位置——可能后退，也可能前进，具体要看哪个位置最近。如果历史记录中不包含该字符串，那么这个方法什么也不做，例如：
+
+    // 跳转到最近的 csdn.com 页面
+    // history.go("csdn.com");
+
+
+    // 另外，还可以使用两个简写方法 `back()` 和 `forward()` 来代替 `go()`。顾名思义，这两个方法可以模仿浏览器的“后退”和“前进”按钮。
+    // 后退一页
+    // history.back();
+
+    // 前进一页
+    // history.forward();
+
+    // 除了上述几个方法外，`history` 对象还有一个 `length` 属性，保存着历史记录的数量。这个数量包括所有历史记录，即所有向后和向前的记录。对于加载到窗口、标签页或框架中的第一个页面而言，`history.length` 等于0。通过像下面这样测试该属性的值，可以确定用户是否一开始就打开了你的页面。
+
+    // if(history.length ==0){
+    //   //这应该是用户打开窗口后的第一个页面
+    // }
+
+    // 虽然 `history` 并不常用，但在创建自定义的“后退”和“前进”按钮，以及检测当前页面是不是用户历史记录中的第一个页面时，还是必须使用它。
+
+
+    // BOM（浏览器对象模型）以 `window` 对象为依托，表示浏览器窗口以及页面可见区域。同时，`window` 对象还是 ECMAScript 中的 `Global` 对象，因而所有全局变量和函数都是它的属性，且所有原生的构造函数及其他函数也都存在于它的命名空间下。本章讨论了下列 BOM 的组成部分。
+
+    // - 在使用框架时，每个框架都有自己的 `window` 对象以及所有原生构造函数及其他函数的副本。每个框架都保存在 `frames` 集合中，可以通过位置或通过名称来访问。
+    // - 有一些窗口指针，可以用来引用其他框架，包括父框架。
+    // - `top` 对象始终指向最外围的框架，也就是整个浏览器窗口。
+    // - `parent` 对象表示包含当前框架的框架，而 `self` 对象则回指 `window`。
+    // - 使用 `location` 对象可以通过编程方式来访问浏览器的导航系统。设置相应的属性，可以逐段或整体性地修改浏览器的 URL。
+    // - 调用 `replace()` 方法可以导航到一个新 URL，同时该 URL 会替换浏览器历史记录中当前显示的页面。
+    // - `navigator` 对象提供了与浏览器有关的信息。到底提供哪些信息，很大程度上取决于用户的浏览器；不过，也有一些公共的属性（如 `userAgent`）存在于所有浏览器中。
+
+    // BOM中还有两个对象：`screen` 和 `history`，但它们的功能有限。`screen` 对象中保存着与客户端显示器有关的信息，这些信息一般只用于站点分析。`history` 对象为访问浏览器的历史记录开了一个小缝隙，开发人员可以据此判断历史记录的数量，也可以在历史记录中向后或向前导航到任意页面。
+
+    // `setTimeout()` 的第二个参数告诉 JavaScript 再过多长时间把当前任务添加到队列中。如果队列是空的，那么添加的代码会立即执行；如果队列不是空的，那么它就要等前面的代码执行完了以后再执行。
+
+    // setTimeout(function(){
+    //   console.log("1");
+    // },0)
+    // console.log("2");//"2","1"
+
+    // for (var i = 0; i < 5; i++) {
+    //   setTimeout(function () {
+    //     console.log(i); //5,5,5,5,5
+    //   }, 0)
+    // };
+
+    // var a = 1;
+    // var obj = {
+    //   a:2,
+    //   b:function(){
+    //     setTimeout(function(){
+    //       console.log(this.a);
+    //     },0)
+    //   }
+    // }
+    // obj.b();  //1
+
+    // var a = 1;
+    // var obj = {
+    //   a: 2,
+    //   b: function () {
+    //     setTimeout(function () {
+    //       console.log(this.a);
+    //     }.call(this), 0);
+    //   }
+    // }
+    // obj.b();//2
+
+
+    // 每个节点都有一个 `nodeType` 属性，用于表明节点的类型。节点类型由在 `Node` 类型中定义的下列12个数值常量来表示，任何节点类型必居其一：
+
+    // - `Node.ELEMENT_NODE`(1)；
+    // - `Node.ATTRIBUTE_NODE`(2)；
+    // - `Node.TEXT_NODE`(3)；
+    // - `Node.CDATA_SECTION_NODE`(4)；
+    // - `Node.ENTITY_REFERENCE_NODE`(5)；
+    // - `Node.ENTITY_NODE`(6)；
+    // - `Node.PROCESSING_INSTRUCTION_NODE`(7)；
+    // - `Node.COMMENT_NODE`(8)；
+    // - `Node.DOCUMENT_NODE`(9)；
+    // - `Node.DOCUMENT_TYPE_NODE`(10)；
+    // - `Node.DOCUMENT_FRAGMENT_NODE`(11)；
+    // - `Node.NOTATION_NODE`(12)。
+
+    // if (someNode.nodeType == Node.ELEMENT_NODE) { // 在IE中无效
+    //   console.log("Node is an element.");
+    // }
+
+    // if(someNode.nodeType == 1){// 适用于所有浏览器
+    //   console.log("Node is an element.");
+    // }
+
+    // - `nodeType`：显示节点的类型
+    // - `nodeName`：显示节点的名称
+    // - `nodeValue`：显示节点的值
+    // - `attributes`：获取一个属性节点
+    // - `firstChild`：表示某一节点的第一个节点
+    // - `lastChild`：表示某一节点的最后一个子节点
+    // - `childNodes`：表示所在节点的所有子节点
+    // - `parentNode`：表示所在节点的父节点
+    // - `nextSibling`：紧挨着当前节点的下一个节点
+    // - `previousSibling`：紧挨着当前节点的上一个节点 
+
+// #### `nodeName` 和 `nodeValue` 属性
+    // if (someNode.nodeType == 1) {
+    //   value = someNode.nodeName;  // nodeName的值是元素的标签名
+    // }
+
+// #### 节点关系
+// var firstChild = someNode.childNodes[0];
+// var secondChild = someNode.childNodes.item(1);
+// var count = someNode.childNodes.length;
+
+// if (someNode.nextSibling === null){
+//     console.log("Last node in the parent’s childNodes list.");
+// } else if (someNode.previousSibling === null){
+//     console.log("First node in the parent’s childNodes list.");
+// }
+
+// #### 操作节点
+// 因为关系指针都是只读的，所以 DOM 提供了一些操作节点的方法。其中，最常用的方法是 `appendChild()`，用于向 `childNodes` 列表的末尾添加一个节点。添加节点后，`childNodes` 的新增节点、父节点及以前的最后一个子节点的关系指针都会相应地得到更新。更新完成后，`appendChild()` 返回新增的节点。来看下面的例子：
+// var returnedNode = someNode.appendChild(newNode);
+// console.log(returnedNode == newNode);         // true
+// console.log(someNode.lastChild == newNode);   // true
+
+// 如果传入到 `appendChild()` 中的节点已经是文档的一部分了，那结果就是将该节点从原来的位置转移到新位置。即使可以将 DOM 树看成是由一系列指针连接起来的，但任何 DOM 节点也不能同时出现在文档中的多个位置上。因此，如果在调用 `appendChild()` 时传入了父节点的第一个子节点，那么该节点就会成为父节点的最后一个子节点，如下面的例子所示。
+// var returnedNode = someNode.appendChild(someNode.firstChild);
+// console.log(returnedNode == someNode.firstChild);// true
+// console.log(returnedNode == someNode.lastChild);// true
+
+
+// 如果需要把节点放在 `childNodes` 列表中某个特定的位置上，而不是放在末尾，那么可以使用 `insertBefore()` 方法。这个方法接受两个参数：要插入的节点和作为参照的节点。插入节点后，被插入的节点会变成参照节点的前一个同胞节点 `previousSibling`，同时被方法返回。如果参照节点是 `null`，则 `insertBefore()` 与 `appendChild()` 执行相同的操作，如下面的例子所示。
+
+//插入后成为最后一个子节点
+// returnedNode = someNode.insertBefore(newNode,null);
+// console.log(newNode == someNode.lastChild);   //true
+
+// 插入后成为第一个子节点
+// var returnedNode = someNode.insertBefore(newNode,someNode.firstChild);
+// console.log(returnedNode ==newNode);        // true
+// console.log(newNode == someNode.firstChild);  // true
+
+// 插入到最后一个子节点前面
+// returnedNode = someNode.insertBefore(newNode,someNode.lastChild);
+// console.log(newNode == someNode.childNodes[someNode.childNodes.length-2]); // true
+
+// 前面介绍的 `appendChild()` 和 `insertBefore()` 方法都只插入节点，不会移除节点。而下面要介绍的 `replaceChild()` 方法接受的两个参数是：要插入的节点和要替换的节点。要替换的节点将由这个方法返回并从文档树中被移除，同时由要插入的节点占据其位置。来看下面的例子
+
+// 替换第一个子节点
+// var returnedNode = someNode.replaceChild(newNode,someNode.firstChild);
+// 替换最后一个子节点
+// returnedNode = someNode.replaceChild(newNode, someNode.lastChild);
+
+// 在使用 `replaceChild()` 插入一个节点时，该节点的所有关系指针都会从被它替换的节点复制过来。尽管从技术上讲，被替换的节点仍然还在文档中，但它在文档中已经没有了自己的位置。
+
+// 如果只想移除而非替换节点，可以使用 `removeChild()` 方法。这个方法接受一个参数，即要移除的节点。被移除的节点将成为方法的返回值，如下面的例子所示。
+// // 移除第一个子节点
+// var formerFirstChild = someNode.removeChild(someNode.firstChild);
+
+// // 移除最后一个子节点
+// var formerLastChild = someNode.removeChild(someNode.lastChild);
+
+// 与使用 `replaceChild()` 方法一样，通过 `removeChild()` 移除的节点仍然为文档所有，只不过在文档中已经没有了自己的位置。
+
+// 前面介绍的四个方法操作的都是某个节点的子节点，也就是说，要使用这几个方法必须先取得父节点（使用 `parentNode` 属性）。另外，并不是所有类型的节点都有子节点，如果在不支持子节点的节点上调用了这些方法，将会导致错误发生。
+
+// #### 文档的子节点
+
+// var html = document.documentElement;       //取得对<html>的引用
+// console.log(html === document.childNodes[0]); //true
+// console.log(html === document.firstChild);   //true
+// 这个例子说明，`documentElement`、`firstChild` 和 `childNodes[0]` 的值相同，都指向 `<html>` 元素。
+
+// var body = document.body  // 取得对<body>的引用
+
+// 取得文档标题
+// var originalTitle = document.title;
+
+// 设置文档标题
+// document.title = "New page title";
+
+// 取得完整的URL
+// var url = document.URL;
+
+// 取得域名
+// var domain = document.domain;
+
+// 取得来源页面的URL
+// var referrer = document.referrer;
+
+// #### 查找元素
+
+// 说到最常见的 DOM 应用，恐怕就要数取得特定的某个或某组元素的引用，然后再执行一些操作了。取得元素的操作可以使用 `document` 对象的几个方法来完成。其中，`Document` 类型为此提供了两个方法：`getElementById()` 和 `getElementsByTagName()`。
+
+// 第一个方法，`getElementById()`，接收一个参数：要取得的元素的 ID。如果找到相应的元素则返回该元素，如果不存在带有相应 ID 的元素，则返回 `null`。注意，这里的 ID 必须与页面中元素的 `id` 特性（attribute）严格匹配，包括大小写。以下面的元素为例。
+
+// <div id="myDiv">Some text</div>
+// 可以使用下面的代码取得这个元素：
+// var div = document.getElementById("myDiv")//// 取得<div>元素的引用
+
+// 另一个常用于取得元素引用的方法是 `getElementsByTagName()`。这个方法接受一个参数，即要取得元素的标签名，而返回的是包含零或多个元素的 `NodeList`。在HTML文档中，这个方法会返回一个`HTMLCollection` 对象，作为一个“动态”集合，该对象与 `NodeList`非常类似。例如，下列代码会取得页面中所有的 `<img>` 元素，并返回一个 `HTMLCollection`。
+
+// var images = document.getElementsByTagName('img');
+// 这行代码会将一个 `HTMLCollection` 对象保存在 `images` 变量中。与 `NodeList` 对象类似，可以使用方括号语法或 `item()` 方法来访问 `HTMLCollection` 对象中的项。而这个对象中元素的数量则可以通过其 `length` 属性取得，如下面的例子所示。
+
+// console.log(images.length);        // 输出图像的数量
+// console.log(images[0].src);        // 输出第一个图像元素的src特性
+// console.log(images.item(0).src);   // 输出第一个图像元素的src特性
+
+// `HTMLCollection` 对象还有一个方法，叫做 `namedItem()`，使用这个方法可以通过元素的 `name` 特性取得集合中的项。例如，假设上面提到的页面中包含如下 `<img>` 元素：
+// <img src="myimage.gif" name="myImage">
+// var myImage = images.namedItem("myImage");
+// 在提供按索引访问项的基础上，`HTMLCollection` 还支持按名称访问项，这就为我们取得实际想要的元素提供了便利。而且，对命名的项也可以使用方括号语法来访问，如下所示：
+// var myImage = images["myImage"];
+
+// 要想取得文档中的所有元素，可以向 `getElementsByTagName()` 中传入 `"*"`。在 JavaScript 及 CSS 中，星号（`*`）通常表示“全部”。下面看一个例子。
+// var allElements = document.getElementsByTagName("*");
+
+// 仅此一行代码返回的 `HTMLCollection` 中，就包含了整个页面中的所有元素——按照它们出现的先后顺序。换句话说，第一项是 `<html>` 元素，第二项是 `<head>` 元素，以此类推。由于 IE 将注释（`Comment`）实现为元素（`Element`），因此在IE中调用 `getElementsByTagName("*")` 将会返回所有注释节点。
+
+// 第三个方法，也是只有 `HTMLDocument` 类型才有的方法，是 `getElementsByName()`。顾名思义，这个方法会返回带有给定 `name` 特性的所有元素。最常使用 `getElementsByName()` 方法的情况是取得单选按钮；为了确保发送给浏览器的值正确无误，所有单选按钮必须具有相同的 `name` 特性，如下面的例子所示。
+
+// <fieldset>
+//     <legend>Which color do you prefer?</legend>
+//     <ul>
+//         <li><input type="radio" value="red" name="color" id="colorRed">
+//             <label for="colorRed">Red</label></li>
+//         <li><input type="radio" value="green" name="color" id="colorGreen">
+//             <label for="colorGreen">Green</label></li>
+//         <li><input type="radio" value="blue" name="color" id="colorBlue">
+//             <label for="colorBlue">Blue</label></li>
+//     </ul>
+// </fieldset>
+
+// 如这个例子所示，其中所有单选按钮的 `name` 特性值都是 `"color"`，但它们的 ID 可以不同。ID 的作用在于将 `<label>` 元素应用到每个单选按钮，而 `name` 特性则用以确保三个值中只有一个被发送给浏览器。这样，我们就可以使用如下代码取得所有单选按钮：
+// var radios = document.getElementsByName("color");
+
+// 与 `getElementsByTagName()` 类似，`getElementsByName()` 方法也会返回一个 `HTMLCollectioin`。但是，对于这里的单选按钮来说，`namedItem()` 方法则只会取得第一项（因为每一项的 `name` 特性都相同）。
+
+// - `document.anchors`，包含文档中所有带 `name` 特性的 `<a>` 元素；
+// - `document.applets`，包含文档中所有的 `<applet>` 元素，因为不再推荐使用 `<applet>` 元素，所以这个集合已经不建议使用了；
+// - `document.forms`，包含文档中所有的 `<form>` 元素，与`document.getElementsByTagName("form")`得到的结果相同；
+// - `document.images`，包含文档中所有的 `<img>` 元素，与`document.getElementsByTagName("img")`得到的结果相同；
+// - `document.links`，包含文档中所有带`href`特性的 `<a>` 元素。
+
+// #### 文档写入
+
+// 有一个 `document` 对象的功能已经存在很多年了，那就是将输出流写入到网页中的能力。这个能力体现在下列4个方法中：`write()`、`writeln()`、`open()` 和 `close()`。其中，`write()` 和 `writeln()` 方法都接受一个字符串参数，即要写入到输出流中的文本。`write()` 会原样写入，而 `writeln()` 则会在字符串的末尾添加一个换行符 `\n`。在页面被加载的过程中，可以使用这两个方法向页面中动态地加入内容
+
+// <body>
+// <div id = "t"><span>aaa</span><span>bbb</span><span>ccc</span></div>
+// </body>
+// <script> 
+//     var d = document.getElementById("t");  
+//     document.writeln(d.firstChild.innerHTML);  // aaa
+//     document.writeln(d.lastChild.innerHTML);   // ccc   
+
+// <body name="ddd">
+// <div id = "t"><span>aaa</span><span>bbb</span><span>ccc</span></div>
+// </body>
+// <script> 
+// var d = document.getElementById("t");
+// document.writeln(d.childNodes[1].innerHTML);//bbb
+// document.writeln(d.parentNode.getAttribute("name"));//ddd
+
+// <body name="ddd">
+// <div id = "t"><span>aaa</span><span>bbb</span><span>ccc</span></div>
+// </body>
+// <script> 
+// var d = document.getElementById("t").childNodes[1];
+// document.writeln(d.nextSibling.innerHTML);    //ccc
+// document.writeln(d.previousSibling.innerHTML);//aaa
+
+
+// - `nodeType` 的值为1；
+// - `nodeName` 的值为元素的标签名；
+// - `nodeValue` 的值为 `null`；
+// - `parentNode` 可能是 `Document` 或 `Element`；
+// - 其子节点可能是 `Element`、`Text`、`Comment`、`ProcessingInstruction`、`CDATASection` 或 `EntityReference`
+
+// 要访问元素的标签名，可以使用 `nodeName` 属性，也可以使用 `tagName` 属性；这两个属性会返回相同的值（使用后者主要是为了清晰起见）。以下面的元素为例：
+
+// <div id="myDiv"></div>
+// var div = document.getElementById("myDiv");
+// console.log(div.tagName);//"DIV"
+// console.log(div.tagName === div.nodeName);//true
+
+// 这里的元素标签名是 `div`，它拥有一个值为 `"myDiv"` 的ID。可是，`div.tagName` 实际上输出的是 `"DIV"` 而非 `"div"`。在HTML中，标签名始终都以全部大写表示；而在 XML（有时候也包括 XHTML）中，标签名则始终会与源代码中的保持一致。假如你不确定自己的脚本将会在 HTML 还是 XML 文档中执行，最好是在比较之前将标签名转换为相同的大小写形式，如下面的例子所示：
+
+// if(element.tagName.toLowerCase()== "div"){
+//   //在此执行某些操作
+// }
+
+// #### HTML 元素
+// - `id`，元素在文档中的唯一标识符。
+// - `title`，有关元素的附加说明信息，一般通过工具提示条显示出来。
+// - `lang`，元素内容的语言代码，很少使用。
+// - `dir`，语言的方向，值为 `"ltr"`（left-to-right，从左至右）或 `"rtl"`（right-to-left，从右至左），也很少使用。
+// - `className`，与元素的 `class` 特性对应，即为元素指定的 CSS 类。没有将这个属性命名为 `class`，是因为 `class` 是 JavaScript 的保留字。
+
+// <div id="myDiv" class="bd" title="Body text" lang="en" dir="ltr"></div>
+// var div = document.getElementById("myDiv")
+// console.log(div.id);         // "myDiv""
+// console.log(div.className);  // "bd"
+// console.log(div.title);      // "Body text"
+// console.log(div.lang);       // "en"
+// console.log(div.dir);        // "ltr"
+
+// 当然，像下面这样通过为每个属性赋予新的值，也可以修改对应的每个特性：
+
+
+// div.id = "someOtherId";
+// div.className = "ft";
+// div.title = "Some other text";
+// div.lang = "fr";
+// div.dir ="rtl";
+
+// #### 取得特性
+
+// 每个元素都有一或多个特性，这些特性的用途是给出相应元素或其内容的附加信息。操作特性的 DOM 方法主要有三个，分别是 `getAttribute()`、`setAttribute()` 和 `removeAttribute()`。这三个方法可以针对任何特性使用，包括那些以 `HTMLElement` 类型属性的形式定义的特性。来看下面的例子：
+// var div = document.getElementById("myDiv");
+// console.log(div.getAttribute("id"));     // "myDiv"
+// console.log(div.getAttribute("class"));  // "bd"
+// console.log(div.getAttribute("title"));  // "Body text"
+// console.log(div.getAttribute("lang"));   // "en"
+// console.log(div.getAttribute("dir"));    // "ltr"
+// 注意，传递给 `getAttribute()` 的特性名与实际的特性名相同。因此要想得到 `class` 特性值，应该传入 `"class"` 而不是 `"className"`，后者只有在通过对象属性访问特性时才用。如果给定名称的特性不存在，`getAttribute()` 返回 `null`。
+
+// 通过 `getAttribute()` 方法也可以取得自定义特性（即标准 HTML 语言中没有的特性）的值，以下面的元素为例：
+// <div id="myDiv" align="left" my_special_attribute="hello!"></div>
+// var value = div.getAttribute("my_special_attribute");
+
+// console.log(div.id);                      // "myDiv"
+// console.log(div.my_special_attribute);    // undefined（IE除外）
+// console.log(div.align);                   // "left"
+
+// 有两类特殊的特性，它们虽然有对应的属性名，但属性的值与通过 `getAttribute()` 返回的值并不相同。第一类特性就是 `style`，用于通过 CSS 为元素指定样式。在通过 `getAttribute()` 访问时，返回的 `style` 特性值中包含的是CSS文本，而通过属性来访问它则会返回一个对象。由于 `style` 属性是用于以编程方式访问元素样式的，因此并没有直接映射到 `style` 特性。
+
+// 第二类与众不同的特性是 `onclick` 这样的事件处理程序。当在元素上使用时，`onclick` 特性中包含的是 JavaScript 代码，如果通过 `getAttribute()` 访问，则会返回相应代码的字符串。而在访问 `onclick` 属性时，则会返回一个 JavaScript 函数（如果未在元素中指定相应特性，则返回 null）。这是因为 `onclick` 及其他事件处理程序属性本身就应该被赋予函数值。
+
+// 由于存在这些差别，在通过 JavaScript 以编程方式操作 DOM 时，开发人员经常不使用 `getAttribute()`，而是只使用对象的属性。只有在取得自定义特性值的情况下，才会使用 `getAttribute()` 方法。
+
+// #### 设置特性
+
+// 与 `getAttribute()` 对应的方法是 `setAttribute()`，这个方法接受两个参数：要设置的特性名和值。如果特性已经存在，`setAttribute()` 会以指定的值替换现有的值；如果特性不存在，`setAttribute()` 则创建该属性并设置相应的值。来看下面的例子：
+
+// div.setAttribute("id","someOtherId")
+// div.setAttribute("class", "ft");
+// div.setAttribute("title", "Some other text");
+// div.setAttribute("lang","fr");
+// div.setAttribute("dir", "rtl");
+
+// 通过 `setAttribute()` 方法既可以操作 HTML 特性也可以操作自定义特性。通过这个方法设置的特性名会被统一转换为小写形式，即 `"ID"` 最终会变成 `"id"`。
+
+// 因为所有特性都是属性，所以直接给属性赋值可以设置特性的值，如下所示。
+
+// div.id = "someOtherId";
+// div.align = "left";
+// 不过，像下面这样为 DOM 元素添加一个自定义的属性，该属性不会自动成为元素的特性。
+// div.mycolor = "red";
+// console.log(div.mycolor); //"red"
+// console.log(div.getAttribute("mycolor")); //null (IE除外)
+
+// 这个例子添加了一个名为 `mycolor` 的属性并将它的值设置为 `"red"`。在大多数浏览器中，这个属性都不会自动变成元素的特性，因此想通过 `getAttribute()` 取得同名特性的值，结果会返回 `null`。可是，自定义属性在 IE 中会被当作元素的特性，反之亦然。
+
+// 要介绍的最后一个方法是 `removeAttribute()`，这个方法用于彻底删除元素的特性。调用这个方法不仅会清除特性的值，而且也会从元素中完全删除特性，如下所示：
+// div.removeAttribute("class");
+
+// #### 创建元素
+
+// 使用 `document.createElement()` 方法可以创建新元素。这个方法只接受一个参数，即要创建元素的标签名。这个标签名在 HTML 文档中不区分大小写。例如，使用下面的代码可以创建一个 `div` 元素。
+
+// var div = document.createElement("div");
+// 在使用 `createElement()` 方法创建新元素的同时，也为新元素设置了 `ownerDocuemnt` 属性。此时，还可以操作元素的特性，为它添加更多子节点，以及执行其他操作。来看下面的例子。
+
+// div.id="myNewDiv";
+// div.className = "box";
+
+// 在新元素上设置这些特性只是给它们赋予了相应的信息。由于新元素尚未被添加到文档树中，因此设置这些特性不会影响浏览器的显示。要把新元素添加到文档树，可以使用 `appendChild()`、`insertBefore()` 或 `replaceChild()` 方法。下面的代码会把新创建的元素添加到文档的 `<body>` 元素中。
+
+// document.body.appendChild(div);
+// 一旦将元素添加到文档树中，浏览器就会立即呈现该元素。此后，对这个元素所作的任何修改都会实时反映在浏览器中。
+
+// #### 元素的子节点   
+
+// 元素可以有任意数目的子节点和后代节点，因为元素可以是其他元素的子节点。元素的 `childNodes` 属性中包含了它的所有子节点，这些子节点有可能是元素、文本节点、注释或处理指令。不同浏览器在看待这些节点方面存在显著的不同，以下面的代码为例。
+
+// <ul id ="myList">
+//     <li>Item 1</li>
+//     <li>Item 2</li>
+//     <li>Item 32</li>
+// </ul>
+
+// 如果是 IE8 来解析这些代码，那么 `<ul>` 元素会有3个子节点，分别是3个 `<li>` 元素。但如果是在其他浏览器中，`<ul>` 元素都会有7个元素，包括3个 `<li>` 元素和4个文本节点（表示 `<li>` 元素之间的空白符）。如果像下面这样将元素间的空白符删除，那么所有浏览器都会返回相同数目的子节点。
+
+// <ul id="myList"><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>
+
+// 对于这段代码，`<ul>` 元素在任何浏览器中都会包含3个子节点。如果需要通过 `childNodes` 属性遍历子节点，那么一定不要忘记浏览器间的这一差别。这意味着在执行某项操作以前，通常都要先检查一下 `nodeTpye` 属性，如下面的例子所示。
+
+// for(var i = 0,len=element.childNodes.length;i<len;i++){
+//   if(element.childNodes[i].nodeType == 1){
+//     //执行某些操作
+//   }
+// }
+// 这个例子会循环遍历特定元素的每一个子节点，然后只在子节点的 `nodeType` 等于1（表示是元素节点）的情况下，才会执行某些操作。
+
+// 如果想通过某个特定的标签名取得子节点或后代节点该怎么办呢？实际上，元素也支持 `getElementsByTagName()` 方法。在通过元素调用这个方法时，除了搜索起点是当前元素之外，其他方面都跟通过 `document` 调用这个方法相同，因此结果只会返回当前元素的后代。例如，要想取得前面 `<ul>` 元素中包含的所有 `<li>` 元素，可以使用下列代码。
+
+// var ul = document.getElementById("myList");
+// var items = ul.getElementsByTagName("li");
+
+// 要注意的是，这里 `<ul>` 的后代中只包含直接子元素。不过，如果它包含更多层次的后代元素，那么各个层次中包含的 `<li>` 元素也都会返回。
+
+
+// ### Text 类型
+
+// 文本节点由 `Text` 类型表示，包含的是可以照字面解释的纯文本内容。纯文本中可以包含转义后的 HTML 字符，但不能包含 HTML 代码。`Text` 节点具有以下特征：
+
+// - `nodeType` 的值为3；
+// - `nodeName` 的值为 `"#text"`；
+// - `nodeValue` 的值为节点所包含的文本；
+// - `parentNode` 是一个 `Element`；
+// - 不支持（没有）子节点。
+
+// 可以通过 `nodeValue` 属性或 `data` 属性访问 `Text` 节点中包含的文本，这两个属性中包含的值相同。对 `nodeValue `的修改也会通过 `data` 反映出来，反之亦然。使用下列方法可以操作节点中的文本。
+
+// - `appendData(*text*)`：将 `*text*` 添加到节点的末尾。
+// - `deleteData(*offset*, *count*)`：从 `*offset*` 指定的位置开始删除 `*count*` 个字符。
+// - `insertData(*offset, text*)`：在 `*offset*` 指定的位置插入 `*text*`。
+// - `replaceData(*offset, count, text*)`：用 `*text*` 替换从 `*offset*` 指定的位置开始到 `*offset*+*count*` 为止处的文本。
+// - `splitText(*offset*)`：从 `*offset*` 指定的位置将当前文本节点分成两个文本节点。
+// - `substringData(*offset, count*)`：提取从 `*offset*` 指定的位置开始到 `*offset+count*` 为止处的字符串。
+
+// 除了这些方法之外，文本节点还有一个 `length` 属性，保存着节点中字符的数目。而且，`nodeValue.length` 和 `data.length` 中也保存着同样的值。
+
+// 在默认情况下，每个可以包含内容的元素最多只能有一个文本节点，而且必须确实有内容存在。来看几个例子。
+
+// <!-- 没有内容，也就没有文本节点 -->
+// <div></div>
+
+// <!-- 有空格，因而有一个文本节点 -->
+// <div> </div>
+
+// <!-- 有内容，因而有一个文本节点 -->
+// <div>Hello World!</div>
+
+// 上面代码给出的第一个 `<div>` 元素没有内容，因此也就不存在文本节点。开始与结束标签之间只要存在内容，就会创建一个文本节点。因此，第二个 `<div>` 元素中虽然只包含一个空格，但仍然有一个文本子节点；文本节点的 `nodeValue` 值是一个空格。第三个 `div` 也有一个文本节点，其 `nodeValue` 的值为 `"Hello World!"`。可以使用以下代码来访问这些文本子节点。
+
+// var textNode = div.firstChild; //或者div.childNodes[0]
+
+// 在取得了文本节点的引用后，就可以像下面这样来修改它了。
+// div.firstChild.nodeValue = "Some other message";
+// 如果这个文本节点当前存在于文档树中，那么修改文本节点的结果就会立即得到反映。另外，在修改文本节点时还要注意，此时的字符串会经过 HTML（或XML，取决于文档类型）编码。换句话说，小于号、大于号或引号都会像下面的例子一样被转义。
+
+// div.firstChild.nodeValue = "Some <strong>other</strong> message";// 输出结果是"Some &lt;strong&gt;other&lt;/strong&gt; message"
+
+// > 在 IE8、Firefox、Safari、Chrome 和 Opera中，可以通过脚本访问 `Text` 类型的构造函数和原型。
+
+// #### 创建文本节点
+
+// 可以使用 `document.createTextNode()` 创建新文本节点，这个方法接受一个参数——要插入节点中的文本。与设置已有文本节点的值一样，作为参数的文本也将按照 HTML 或 XML 的格式进行编码。
+
+// var textNode = document.createTextNode("<strong>Hello</strong> world!");
+
+// 在创建新文本节点的同时，也会为其设置 `ownerDocument` 属性。不过，除非把新节点添加到文档树中已经存在的节点中，否则我们不会在浏览器窗口中看到新节点。下面的代码会创建一个 `<div>` 元素并向其中添加一条消息。
+
+// var element = document.createElement("div");
+// element.className = "message";
+
+// var textNode = document.createTextNode("Hello world!");
+// element.appendChild(textNode);
+
+// document.body.appendChild(element);
+
+// 这个例子创建了一个新 `<div>` 元素并为它指定了值为 `"message"` 的 `class` 特性。然后，又创建了一个文本节点，并将其添加到前面创建的元素中。最后一步，就是将这个元素添加到了文档的 `<body>` 元素中，这样就可以在浏览器中看到新创建的元素和文本节点了。
+
+// 一般情况下，每个元素只有一个文本子节点。不过，在某些情况下也可能包含多个文本子节点，如下面的例子所示
+
+// var element =document.createElement("div");
+// element.className = "message";
+
+// var textNode = document.createTextNode("Hello world!");
+// element.appendChild(textNode);
+
+// var anotherTextNode = document.createTextNode("wa!!!!!!!!");
+// element.appendChild(anotherTextNode);
+
+// document.body.appendChild(element);
+// 如果两个文本节点是相邻的同胞节点，那么这两个节点中的文本就会连起来显示，中间不会有空格。
+
+// #### 规范化文本节点
+
+// DOM 文档中存在相邻的同胞文本节点很容易导致混乱，因为分不清哪个文本节点表示哪个字符串。另外，DOM 文档中出现相邻文本节点的情况也不在少数，于是就催生了一个能够将相邻文本节点合并的方法。这个方法是由 `Node` 类型定义的（因而在所有节点类型中都存在），名叫 `normalize()`。如果在一个包含两个或多个文本节点的父元素上调用 `normalize()` 方法，则会将所有文本节点合并成一个节点，结果节点的 `nodeValue` 等于将合并前每个文本节点的 `nodeValue` 值拼接起来的值。来看一个例子。
+
+// var element = document.createElement("div");
+// element.className = "message";
+
+// var textNode = document.createTextNode("Hello world!");
+// element.appendChild(textNode);
+
+// var anotherTextNode = document.createTextNode("wa1!!!!!!!!!!!!!");
+// element.appendChild(anotherTextNode);
+
+// document.body.appendChild(element);
+// console.log(element.childNodes.length);     //2
+
+// element.normalize();
+// console.log(element.childNodes.length);  //1
+// console.log(element.firstChild.nodeValue); //Hello world!wa1!!!!!!!!!!!!!
+
+// 浏览器在解析文档时永远不会创建相邻的文本节点。这种情况只会作为执行DOM操作的结果出现。
+
+// #### 分割文本节点
+
+// `Text` 类型提供了一个作用与 `normalize()` 相反的方法 `splitText()`。这个方法会将一个文本节点分成两个文本节点，即按照指定的位置分割 `nodeValue` 值。原来的文本节点将包含从开始到指定位置之前的内容，新文本节点将包含剩下的文本。这个方法会返回一个新文本节点，该节点与原节点的 `parentNode` 相同。
+
+// ### Comment 类型
+
+// 注释在 DOM 中是通过 `Comment` 类型来表示的。`Comment` 节点具有下列特征：
+
+// - `nodeType` 的值为8；
+// - `nodeName` 的值为 `"#comment"`；
+// - `nodeValue` 的值是注释的内容；
+// - `parentNode` 可能是 `Document` 或 `Element`；
+// - 不支持（没有）子节点。
+
+// `Comment` 类型与 `Text` 类型继承自相同的基类，因此它拥有除`splitText()` 之外的所有字符串操作方法。与 `Text` 类型相似，也可以通过 `nodeValue` 或 `data` 属性来取得注释的内容。
+
+// 注释节点可以通过其父节点来访问，以下面的代码为例。
+
+// <div id="myDiv"><!--A comment --></div>
+
+// 在此，注释节点是 `<div>` 元素的一个子节点，因此可以通过下面的代码来访问它。
+// var div = document.getElementById("myDiv");
+// var comment = div.firstChild;
+// console.log(comment.data);  // "A comment"
+
+// 另外，使用 `document.createComment()` 并为其传递注释文本也可以创建注释节点，如下面的例子所示。
+// var comment = document.createComment("A comment");
+
+
+// 显然，开发人员很少会创建和访问注释节点，因为注释节点对算法鲜有影响。此外，浏览器也不会识别位于 `</html>` 标签后面的注释。如果要访问注释节点，一定要保证它们位于 `<html>` 和 `</html>` 之间。
+
+// ### Attr 类型
+
+// 元素的特性在 DOM 中以 `Attr` 类型来表示。在所有浏览器中（包括 IE8），都可以访问 `Attr` 类型的构造函数和原型。从技术角度讲，特性就是存在于元素的 `attributes` 属性中的节点。特性节点具有下列特征：
+
+// - `nodeType` 的值为11；
+// - `nodeName` 的值是特性的名称；
+// - `nodeValue` 的值是特性的值；
+// - `parentNode` 的值为 `null`；
+// - 在 HTML 中不支持（没有）子节点；
+// - 在 XML 中子节点可以是 `Text `或 `EntityReference`。
+
+// 尽管它们也是节点，但特性却不被认为是 DOM 文档树的一部分。开发人员最常使用的是 `getAttribute()`、`setAttribute()` 和 `remveAttribute()` 方法，很少直接引用特性节点。
+
+// `Attr` 对象有3个属性：`name`、`value` 和 `specified`。其中，`name` 是特性名称（与 `nodeName` 的值相同），`value` 是特性的值（与 `nodeValue` 的值相同），而 `specified` 是一个布尔值，用以区别特性是在代码中指定的，还是默认的。
+
+// 使用 `document.createAttribute()` 并传入特性的名称可以创建新的特性节点。例如，要为元素添加 `align` 特性，可以使用下列代码：
+
+// var attr = document.createAttribute("align");
+// attr.value = "left";
+// element.setAttributeNode(attr);
+// console.log(element.attributes["align".value]);// "left"
+// console.log(element.getAttributeNode("align")).value;// "left"
+// console.log(element.getAttribute("align"));// "left"
+// 添加特性之后，可以通过下列任何方式访问该特性：`attributes` 属性、`getAttributeNode()` 方法以及 `getAttribute()` 方法。其中，`attributes` 和 `getAttributeNode()` 都会返回对应特性的 `Attr` 节点，而 `getAttribute()` 则只返回特性的值。
+
+// ### 动态脚本
+// <script type="text/javascript" src="client.js"> 
+
+// function loadScript(url){
+//   var script = document.createElement("script");
+//   script.type = "text/javascript";
+//   script.src = url;
+//   document.body.appendChild(script);
+// }
+
+// loadScript("client.js");
+
+
+// var script = document.createElement("script");
+// script.type = "text/javascript";
+// script.appendChild(document.createTextNode("function sayHi(){alert('hi');}"));
+// document.body.appendChild(script);
+
+// var script = document.createElement("script");
+// script.type = "text/javascript";
+// script.text = "function sayHi(){alert('hi');}";
+// document.body.appendChild(script);
+
+// function loadScriptString(code){
+//     var script = document.createElement("script");
+//     script.type = "text/javascript";
+//     try {
+//         script.appendChild(document.createTextNode(code));
+//     } catch (ex){
+//         script.text = code;
+//     }
+//     document.body.appendChild(script);
+// }
+
+// loadScriptString("function sayHi(){alert('hi');}");
+
+// <link rel="stylesheet" type="text/css" href="styles.css">
+
+// ### 动态样式
+// function loadStyles(url){
+//     var link = document.createElement("link");
+//     link.rel = "stylesheet";
+//     link.type = "text/css";
+//     link.href = url;
+//     var head = document.getElementsByTagName("head")[0];
+//     head.appendChild(link);
+// }
+// loadStyles("styles.css");
+
+
+// <style type="text/css">
+// body { background-color: red; }
+// </style>
+
+// var style = document.createElement("style");
+// style.type = "text/css";
+// style.appendChild(document.createTextNode("body{background-color:red}"));
+// var head = document.getElementsByTagName("head")[0];
+// head.appendChild(style);
+
+// 以上代码可以在 Firefox、Safari、Chrome 和 Opera 中运行，在 IE 中则会报错。IE将 `<style>` 视为一个特殊的、与 `<script>` 类似的节点，不允许访问其子节点。事实上，IE 此时抛出的错误与向 `<script>` 元素添加子节点时抛出的错误相同。解决 IE 中这个问题的办法，就是访问元素的 `styleSheet` 属性，该属性又有一个 `cssText` 属性，可以接受 CSS 代码），如下面的例子所示。
+
+// function loadStyleString(css){
+//   var style = document.createElement("style");
+//   style.type = "text/css";
+//   try{
+//     style.appendChild(document.createTextNode(css));
+//   }catch(ex){
+//     style.styleSheet.cssText = css;
+//   }
+//   var head= document.getElementsByTagName("head")[0];
+//   head.appendChild(style);
+// }
+// 调用这个函数的示例如下：
+// loadStyleString("body{background-color:red}");
+
+// ### 使用 NodeList
+
+// 理解 `NodeList` 及其“近亲” `NamedNodeMap` 和 `HTMLCollection`，是从整体上透彻理解 DOM 的关键所在。这三个集合都是“动态的”；换句话说，每当文档结构发生变化时，它们都会得到更新。因此，它们始终都会保存着最新、最准确的信息。从本质上说，所有 `NodeList` 对象都是在访问 DOM 文档时实时运行的查询。例如，下列代码会导致无限循环：
+
+// var i,div,divs = document.getElementsByTagName("div");
+// for(i=0;i<divs.length;i++){
+//   div = document.createElement("div");
+//   document.body.appendChild(div);
+// }
+
+// 第一行代码会取得文档中所有 `<div>` 元素的 `HTMLCollection`。由于这个集合是“动态的”，因此只要有新 `<div>` 元素被添加到页面中，这个元素也会被添加到该集合中。浏览器不会将创建的所有集合都保存在一个列表中，而是在下一次访问集合时再更新集合。结果，在遇到上例中所示的循环代码时，就会导致一个有趣的问题。每次循环都要对条件 `i < divs.length` 求值，意味着会运行取得所有 `<div>` 元素的查询。考虑到循环体每次都会创建一个新 `<div>` 元素并将其添加到文档中，因此 `divs.length` 的值在每次循环后都会递增。既然`i`和 `divs.length` 每次都会同时递增，结果它们的值永远也不会相等。
+
+// 如果想要迭代一个 `NodeList`，最好是使用 `length` 属性初始化第二个变量，然后将迭代器与该变量进行比较，如下面的例子所示
+
+// var i,len,div,divs = document.getElementsByTagName("div");
+// for (i=0, len=divs.length; i < len; i++){
+//     div = document.createElement("div");
+//     document.body.appendChild(div);
+// }
+
+// 这个例子中初始化了第二个变量 `len`。由于 `len` 中保存着对 `divs.length` 在循环开始时的一个快照，因此就会避免上一个例子中出现的无限循环问题。在本章演示迭代 `NodeList` 对象的例子中，使用的都是这种更为保险的方式。
+
+// 一般来说，应该尽量减少访问 `NodeList` 的次数。因为每次访问 `NodeList`，都会运行一次基于文档的查询。所以，可以考虑将从 `NodeList` 中取得的值缓存起来。
+
+// DOM 由各种节点构成，简要总结如下。
+
+// - 最基本的节点类型是 `Node`，用于抽象地表示文档中一个独立的部分；所有其他类型都继承自 `Node`。
+// - `Document` 类型表示整个文档，是一组分层节点的根节点。在 JavaScript 中，`document` 对象是 `Document` 的一个实例。使用 `document` 对象，有很多种方式可以查询和取得节点。
+// - `Element` 节点表示文档中的所有 HTML 或 XML 元素，可以用来操作这些元素的内容和特性。
+// - 另外还有一些节点类型，分别表示文本内容、注释、文档类型、CDATA 区域和文档片段。
+
+  </script>
+
+</body>
+
+</html>
